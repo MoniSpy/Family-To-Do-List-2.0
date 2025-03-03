@@ -12,11 +12,10 @@ const db= new pg.Client({
 });
 db.connect();
 
-async function getUsersLists(id){
-    const result=await db.query("SELECT lists.id ,lists_name, color FROM lists JOIN users ON users.id=lists.user_id WHERE users.id=$1;",
-    [id]);
-    return result.rows;
-  }
+ //Get Users
+ async function getUsers() {
+    const usersList=await db.query("SELECT * FROM users;");
+    return usersList.rows;
+   }
 
-
-  export {getUsersLists};
+export {getUsers};
