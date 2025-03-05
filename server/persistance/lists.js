@@ -17,6 +17,5 @@ async function getUsersLists(id){
     [id]);
     return result.rows;
   }
-
-
+  
   export {getUsersLists};
