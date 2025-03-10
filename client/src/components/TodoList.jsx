@@ -3,20 +3,22 @@ import { useState } from "react";
 import TodoItem from "./TodoItem";
 
 
-function TodoList() {
-    const [tasks, setTasks] = useState([
-    {
-        id: 1,
-        text: 'Doctor Appointment',
-        completed: true
-    },
-    {
-        id: 2,
-        text: 'Meeting at School',
-        completed: false
-    }
-    ]);
-    
+function TodoList(props) {
+    const [tasks, setTasks] = useState(
+        props.list
+
+    // {
+    //     id: 1,
+    //     text: 'Doctor Appointment',
+    //     completed: true
+    // },
+    // {
+    //     id: 2,
+    //     text: 'Meeting at School',
+    //     completed: false
+    // }
+    );
+
     const [text, setText] = useState('');
     function addTask(text) {
     const newTask = {
@@ -40,24 +42,26 @@ function TodoList() {
     }));
     }
    return (
-    <div className="box">
-        <h1>List title</h1>
-        {tasks.map(task => (
-            <div className="item">
-                <TodoItem
-                    key={task.id} 
-                task={task}
-                deleteTask={deleteTask}
-                    toggleCompleted={toggleCompleted} 
-                />
-            </div>
-        ))}
-        <input
-            type="text"
-            value={text}
-            onChange={e => setText(e.target.value)} 
-        />
-        <button className="add" onClick={() => addTask(text)}>+</button>
+    <div className={props.className} style={props.style}>
+        <div className="box"> 
+            <h1>{props.title}</h1>
+            {tasks.map(task => (
+                <div className="item">
+                    <TodoItem
+                        key={task.id} 
+                        task={task}
+                        deleteTask={deleteTask}
+                        toggleCompleted={toggleCompleted} 
+                    />
+                </div>
+            ))}
+            <input
+                type="text"
+                value={text}
+                onChange={e => setText(e.target.value)} 
+            />
+            <button className="add" onClick={() => addTask(text)}>+</button>
+        </div>
     </div>
     );
    }

@@ -29,6 +29,7 @@ header h1 {
   font-weight: 200;
 }
 
+
 footer {
   /* position: absolute; */
   text-align: center;
@@ -41,6 +42,10 @@ footer p {
   color: #ccc;
 }
 
+.list{
+  display: inline-block;
+  padding: 20px;
+}
 .todo-item {
   display: flex;
   justify-content: space-between;
@@ -58,6 +63,7 @@ footer p {
 }
 
  .box {
+  margin: 20px;
   max-width: 400px;
   margin: 50px auto;
   background: white;
@@ -70,6 +76,7 @@ footer p {
   color: #fff;
   text-align: center;
   padding: 10px;
+  font-family: "McLaren", cursive;
   border-top-right-radius: 15px;
   border-top-left-radius: 15px;
 }
