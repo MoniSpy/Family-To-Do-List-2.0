@@ -1,12 +1,10 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 import Header from "./Header";
 import Footer from "./Footer";
 import TodoList from "./TodoList";
+import axios from "axios";
 
-
-
-
-
+const BASE_URL= "http://localhost:3000/";
 
 const lists = [
   {
@@ -92,10 +90,17 @@ const lists = [
   
 ];
 
-
-  
-
 function App() {
+
+
+  async function addTask(newTask) {
+  
+    const response =await axios.post(BASE_URL+"newtask", {newTask});
+    console.log(response.data);
+    return response.data;
+
+  }
+
   return (
     <div>
       <Header /> 
@@ -108,15 +113,16 @@ function App() {
                   key={index}
                   list={list.list}
                   title={list.title}
+                  onAdd={addTask}
                 />
             );
           })}
         </div>
       </div>
-      
       <Footer />
     </div>
   );
 }
+
 
 export default App;

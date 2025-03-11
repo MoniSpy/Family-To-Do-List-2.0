@@ -20,14 +20,18 @@ function TodoList(props) {
     );
 
     const [text, setText] = useState('');
-    function addTask(text) {
-    const newTask = {
-        id: Date.now(),
-        text,
-        completed: false
-    };
-    setTasks([...tasks, newTask]);
-    setText('');
+
+    function submitTask(text) {
+        const newTask = {
+            id: Date.now(),
+            text,
+            completed: false
+        };
+        props.onAdd(newTask);
+        console.log(newTask);
+
+        setTasks([...tasks, newTask]);
+        setText('');
     }
    function deleteTask(id) {
     setTasks(tasks.filter(task => task.id !== id));
@@ -60,7 +64,7 @@ function TodoList(props) {
                 value={text}
                 onChange={e => setText(e.target.value)} 
             />
-            <button className="add" onClick={() => addTask(text)}>+</button>
+            <button className="add" onClick={() => submitTask(text)}>+</button>
         </div>
     </div>
     );
