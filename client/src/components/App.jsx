@@ -4,104 +4,28 @@ import Footer from "./Footer";
 import TodoList from "./TodoList";
 import axios from "axios";
 
-const BASE_URL= "http://localhost:3000/";
-
-const lists = [
-  {
-    id: 1,
-    list:[
-      {
-        id: 1,
-        text: 'Doctor ',
-        completed: true
-      },
-      {
-        id: 2,
-        text: 'Meeting at School',
-        completed: false
-      }
-    ],
-    title: "To Do List 1"
-  },
-  {
-    id: 2,
-    list:[
-      {
-        id: 1,
-        text: 'Doctor Appointment',
-        completed: true
-      },
-      {
-        id: 2,
-        text: 'Meeting at School',
-        completed: false
-      }
-    ],
-    title: "To Do List 2"
-  },
-  {
-    id: 3,
-    list:[
-      {
-        id: 1,
-        text: 'Doctor Appointment',
-        completed: true
-      },
-      {
-        id: 2,
-        text: 'Meeting at School',
-        completed: false
-      }
-    ],
-    title: "To Do List 3"
-  },
-  {
-    id: 4,
-    list:[
-      {
-        id: 1,
-        text: 'Doctor Appointment',
-        completed: true
-      },
-      {
-        id: 2,
-        text: 'Meeting at School',
-        completed: false
-      }
-    ],
-    title: "To Do List 4"
-  },
-  {
-    id:5 ,
-    list:[
-      {
-        id: 1,
-        text: 'Doctor Appointment',
-        completed: true
-      },
-      {
-        id: 2,
-        text: 'Meeting at School',
-        completed: false
-      }
-    ],
-    title: "To Do List 5"
-  }
-  
-];
+const BASE_URL= "http://localhost:3000";
 
 function App() {
 
+const [lists, setLists]=useState();
 
-  async function addTask(newTask) {
-  
-    const response =await axios.post(BASE_URL+"newtask", {newTask});
+useEffect(()=>{
+    if (!lists){
+      axios.get(BASE_URL+"/").then((res)=>{
+        setLists(res.data || []);
+      });
+    }
+  },[lists]);
+
+
+async function addTask(newItem) {
+    const response =await axios.post(BASE_URL+"newtask", newItem);
     console.log(response.data);
     return response.data;
-
   }
 
-  return (
+return (
     <div>
       <Header /> 
       <div className="container">

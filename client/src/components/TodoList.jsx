@@ -1,25 +1,14 @@
 import react from "react";
 import { useState } from "react";
 import TodoItem from "./TodoItem";
+import { getDate } from "../../../server/helpers/helpers";
 
 
 function TodoList(props) {
     const [tasks, setTasks] = useState(
         props.list
-
-    // {
-    //     id: 1,
-    //     text: 'Doctor Appointment',
-    //     completed: true
-    // },
-    // {
-    //     id: 2,
-    //     text: 'Meeting at School',
-    //     completed: false
-    // }
     );
 
-    ///try 
     const [text, setText] = useState('');
 
     function submitTask(text) {
@@ -28,12 +17,19 @@ function TodoList(props) {
             text,
             completed: false
         };
-        props.onAdd(newTask);
-        console.log(newTask);
+        const data = {
+            title:text,
+            date:getDate(new Date()),
+            lists_id:13,
+            users_id:9
+        }
+        props.onAdd(data);
+        console.log(data);
 
         setTasks([...tasks, newTask]);
         setText('');
     }
+
    function deleteTask(id) {
     setTasks(tasks.filter(task => task.id !== id));
     }

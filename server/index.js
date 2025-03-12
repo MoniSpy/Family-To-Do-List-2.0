@@ -1,13 +1,7 @@
 import express from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
-import { getUsersLists } from "./persistance/lists.js";
-import { getUsers } from "./persistance/users.js";
-import { getDate } from "./helpers/helpers.js";
-
-
-
-
+import { addNewItem ,getAllItems} from "./persistance/tasks.js";
 
 const app=express();
 const port= 3000;
@@ -19,27 +13,37 @@ app.use(cors());
 
 
 
-const id=9;
 app.get("/", async (req,res) =>{
-    //Get user list
-    const usersLists= await getUsersLists(id);
-    //Get users
-    const users=await getUsers();
-    console.log("User lists " );
-    console.log(usersLists);
-    console.log("Users ");
-    console.log(users);
+    const tasks=await getAllItems();
+    const result={}
+    tasks.forEach(task=> {
+        const id=task.id;
+        const text=task.title;
+        const date=task.creation_date;
+        const completed=task.completed;
+        const title=task.lists_name;
+        const list_id=task.lists_id;
+
+        result[list_id]={
+            id,
+            title,
+            list:[...(result[list_id]?.list || []), {id,text,completed}]
+        }     
+    });
+    res.send(Object.values(result));
 });
 
+
 //Add task
-app.post("/newtask" , async (req,res) =>{;
+app.post("/newtask" , async (req,res) =>{
+    console.log("Logging requested body");
     console.log(req.body); 
+    const newItem=req.body;
+    let items=await addNewItem(newItem);
     res.send("Hello from the backend"); 
 });
 
 
-
-app.get("",)
 app.listen(port, () =>{
     console.log(`Server running on port ${port}`);
 });
