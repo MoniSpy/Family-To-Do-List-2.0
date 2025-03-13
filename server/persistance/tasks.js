@@ -1,8 +1,23 @@
 import {getDb} from "./db.js";
 
 
-async function addNewItem (newItem){
+async function addNewList(newList){
+    console.log(newList);
+    try{
+        const db=await getDb();
+        const result= await db.query(`INSERT INTO lists (lists_name, user_id) VALUES ($1, $2) RETURNING *`,
+            [newList.title,newList.user_id]
+        );
+        console.log(result.rows);
+        return result.rows[0];
+    }catch(e){
+        console.log(e.message);     
+    }
     
+}
+
+
+async function addNewItem (newItem){  
     try{
         const db=await getDb();
         const result= await db.query(`INSERT INTO items (title, creation_date, lists_id, users_id) VALUES ($1, $2, $3, $4) RETURNING *`,
@@ -13,8 +28,8 @@ async function addNewItem (newItem){
         return result.rows; 
 
     }catch(e){
-        console.log(e);
-        res.status(400).send(e.message);
+        console.log(e.message);
+        
     }
 }
  async function getAllItems(){
@@ -30,4 +45,4 @@ async function addNewItem (newItem){
         res.status(400).send(e.message);
     }
  }
-export {addNewItem, getAllItems};
+export {addNewItem, getAllItems, addNewList};

@@ -1,7 +1,7 @@
 import express from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
-import { addNewItem ,getAllItems} from "./persistance/tasks.js";
+import { addNewItem ,getAllItems, addNewList} from "./persistance/tasks.js";
 
 const app=express();
 const port= 3000;
@@ -35,14 +35,19 @@ app.get("/", async (req,res) =>{
 
 
 //Add task
-app.post("/newtask" , async (req,res) =>{
-    console.log("Logging requested body");
-    console.log(req.body); 
+app.post("/newtask" , async (req,res) =>{ 
     const newItem=req.body;
     let items=await addNewItem(newItem);
     res.send(items); 
 });
 
+app.post("/newlist" , async (req,res) => {
+    const newList=await addNewList(req.body);
+    console.log(newList);
+    const id=newList.id;
+    res.send(id.toString());
+
+});
 
 app.listen(port, () =>{
     console.log(`Server running on port ${port}`);
