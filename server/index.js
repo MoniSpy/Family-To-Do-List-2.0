@@ -40,7 +40,7 @@ app.post("/newtask" , async (req,res) =>{
     console.log(req.body); 
     const newItem=req.body;
     let items=await addNewItem(newItem);
-    res.send("Hello from the backend"); 
+    res.send(items); 
 });
 
 
