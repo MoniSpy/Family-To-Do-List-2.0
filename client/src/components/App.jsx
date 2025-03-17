@@ -5,6 +5,7 @@ import TodoList from "./TodoList";
 import axios from "axios";
 
 const BASE_URL= "http://localhost:3000";
+const userId=9;
 
 function App() {
 
@@ -19,7 +20,7 @@ useEffect(()=>{
   },[lists]);
 
 async function addTask(newItem) {
-    const response =await axios.post(BASE_URL+"newtask", newItem); 
+    const response =await axios.post(BASE_URL+"/newtask", newItem); 
     return response.data;
   }
   
@@ -27,7 +28,8 @@ async function addList(){
   console.log("add new list process");
     const newList={
     title:"New list title..",
-    user_id:9
+    user_id:9,
+    
   }
 
   const response= await axios.post(BASE_URL+"/newlist", newList);
@@ -36,7 +38,12 @@ async function addList(){
   const result={
     id:response.data,
     title:newList.title,
-    list:[]
+    list:[{
+      text:" ",
+      completed:false,
+      user_id:userId,
+      lists_id:response.data
+    }]
   }
   setLists([...lists, result]);
 }
@@ -50,20 +57,20 @@ return (
       <div className="container">
         <div className="row">
           {lists?.map((list, index )=> {
+            console.log(list);
             return (
                 <TodoList 
+                  id={list.id}
                   className="col-sm-4"
                   key={index}
-                  list={list.list}
-                  title={list.title}
+                  tasks={list.tasks}
+                  title={list.lists_name}
                   onAdd={addTask}
                 />
             );
           })}
         </div>
-      </div>
-      
-      
+      </div> 
       <Footer />
     </div>
   );

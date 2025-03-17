@@ -1,36 +1,42 @@
 import express from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
-import { addNewItem ,getAllItems, addNewList} from "./persistance/tasks.js";
+import { addNewItem ,getAllItems} from "./persistance/tasks.js";
+import {addNewList} from "./persistance/lists.js";
+import { getUserItems, getUserLists} from "./persistance/users.js";
 
 const app=express();
 const port= 3000;
+const userId=9;
 
 //Middelwear
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cors());
-
-
-
 app.get("/", async (req,res) =>{
-    const tasks=await getAllItems();
-    const result={}
-    tasks.forEach(task=> {
-        const id=task.id;
-        const text=task.title;
-        const date=task.creation_date;
-        const completed=task.completed;
-        const title=task.lists_name;
-        const list_id=task.lists_id;
+    
+    // const tasks=await getAllItems();
+    const tasks=await getUserItems(userId);
+    
+    const lists=await getUserLists(userId);
+    console.log(tasks);
+    console.log(lists);
 
-        result[list_id]={
-            id,
-            title,
-            list:[...(result[list_id]?.list || []), {id,text,completed}]
-        }     
+    const listsById={
+
+    }
+
+    lists.forEach(list => {
+        listsById[list.id]={...list, tasks:[]}
+        console.log(listsById);  
     });
-    res.send(Object.values(result));
+
+    tasks.forEach(task =>{
+        listsById[task.lists_id.toString()].tasks=[...listsById[task.lists_id.toString()].tasks, task];
+        console.log(JSON.stringify(listsById,null,4));
+    });
+    
+    res.send(Object.values(listsById));
 });
 
 
@@ -43,8 +49,17 @@ app.post("/newtask" , async (req,res) =>{
 
 app.post("/newlist" , async (req,res) => {
     const newList=await addNewList(req.body);
-    console.log(newList);
     const id=newList.id;
+    const data = {
+        title:" ",
+        date:new Date(),
+        completed:false,
+        lists_id:id,
+        users_id:userId
+    }
+    const newTask=await addNewItem(data)
+    console.log(newList);
+    
     res.send(id.toString());
 
 });

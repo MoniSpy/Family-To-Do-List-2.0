@@ -14,8 +14,8 @@ function handleChange() {
         checked={task.completed}
         onChange={handleChange}
      />
-     <p>{task.text}</p>
-     <button className="deleteButton" onClick={() => deleteTask(task.id)}>
+     <p>{task.title}</p>
+     <button className="deleteTask" onClick={() => deleteTask(task.id)}>
       <DeleteIcon />
     </button>
     </div>
