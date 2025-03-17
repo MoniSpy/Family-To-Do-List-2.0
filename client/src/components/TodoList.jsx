@@ -1,25 +1,21 @@
 import react from "react";
 import { useState } from "react";
 import TodoItem from "./TodoItem";
-
+import { getDate } from "../../../server/helpers/helpers";
+import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 
 function TodoList(props) {
-    const [tasks, setTasks] = useState(
-        props.list
+    
 
-    // {
-    //     id: 1,
-    //     text: 'Doctor Appointment',
-    //     completed: true
-    // },
-    // {
-    //     id: 2,
-    //     text: 'Meeting at School',
-    //     completed: false
-    // }
+    const [isVisible, setIsVisible]=useState(false);
+
+    const [tasks, setTasks] = useState(
+        props.tasks
     );
 
     const [text, setText] = useState('');
+
+    const [title, setTitle]=useState(props.title);
 
     function submitTask(text) {
         const newTask = {
@@ -27,16 +23,23 @@ function TodoList(props) {
             text,
             completed: false
         };
-        props.onAdd(newTask);
-        console.log(newTask);
-
+        const data = {
+            title:text,
+            date:getDate(new Date()),
+            completed:false,
+            lists_id:13,
+            users_id:9
+        }
+        props.onAdd(data);
         setTasks([...tasks, newTask]);
         setText('');
     }
+
    function deleteTask(id) {
     setTasks(tasks.filter(task => task.id !== id));
     }
-   function toggleCompleted(id) {
+   
+    function toggleCompleted(id) {
     setTasks(tasks.map(task => {
     if (task.id === id) {
         return {...task, completed: !task.completed};
@@ -45,10 +48,36 @@ function TodoList(props) {
     } 
     }));
     }
+
+
+    // function editTitle(event){
+    //     console.log("editting title");
+    //     const {value} =event.target;
+    //     console.log(value);
+        
+    // }
+
    return (
     <div className={props.className} style={props.style}>
         <div className="box"> 
-            <h1>{props.title}</h1>
+                <form className="list">
+                    <input 
+                        className="title"
+                        type="text"
+                        name="text"
+                        // onBlur={editTitle}
+                        onChange={e => setTitle(e.target.value)} 
+                        placeholder="Title"  
+                        value={title}
+                    /> 
+                    <button className="deleteList" onClick={() => deleteList()}>
+                        <DeleteIcon 
+                            sx={{fontSize:40}}
+                        />
+                    </button>
+                </form>
+                
+                
             {tasks.map(task => (
                 <div className="item">
                     <TodoItem
@@ -60,6 +89,7 @@ function TodoList(props) {
                 </div>
             ))}
             <input
+                className="task"
                 type="text"
                 value={text}
                 onChange={e => setText(e.target.value)} 

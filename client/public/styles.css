@@ -42,10 +42,7 @@ footer p {
   color: #ccc;
 }
 
-.list{
-  display: inline-block;
-  padding: 20px;
-}
+
 .todo-item {
   display: flex;
   justify-content: space-between;
@@ -80,6 +77,36 @@ footer p {
   border-top-right-radius: 15px;
   border-top-left-radius: 15px;
 }
+.title:focus{
+  outline: none;
+  box-shadow: inset 0 -3px 0 0 #f5ba13;
+}
+
+.list{
+  border-top-right-radius: 15px;
+  border-top-left-radius: 15px;
+  display: flex;
+  flex-direction: row;
+}
+.title{
+  background-color: #f5ba13;
+  border: transparent;
+  border-top-left-radius: 15px;
+  color: #fff;
+  text-align: center;
+  font-family: "McLaren", cursive;
+  font-size: 37px;
+  font-weight: 200;
+  width: 100%;
+}
+
+.deleteList{
+  border-top-right-radius: 15px;
+  padding: 20px 20px;
+  background-color: #f5ba13;
+  border: transparent;
+  color:#fff;
+}
 .box input[type="text"] {
   padding-left: 20px;
 }
@@ -95,13 +122,14 @@ footer p {
     border-width: 0;
     margin-right: 10px;
   }
-.deleteButton{
+
+.deleteTask{
   background-color: transparent;
   border: none;
   padding-left: 20px;
 }
 
-input[type="text"] {
+.task {
   box-shadow: inset 0 -3px 0 0 #e5e5e5;
   text-align: left;
   height: 60px;
@@ -113,7 +141,8 @@ input[type="text"] {
   width: 80%;
   
 }
-input[type="text"]:focus {
+.task:focus {
+  
   outline: none;
   box-shadow: inset 0 -3px 0 0 #f5ba13;
 }
@@ -124,3 +153,19 @@ input[type="text"]:focus {
   border-bottom: 1px solid #f1f1f1;
 }
 
+ .newList >button{
+    border-radius: 50px;
+    background-color: #f5ba13;
+    color: #fff;
+    font-family: "McLaren", cursive;
+    font-weight: 200;
+    border-color: transparent;
+    padding: 20px;
+    font-size: 36px;
+}
+.newList{
+  display: flex;
+  justify-content: center;
+  margin-top: 30px;
+
+}

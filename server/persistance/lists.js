@@ -1,21 +1,18 @@
-import pg from "pg";
-import env from "dotenv";
+import {getDb} from "./db.js";
 
-env.config();
 
-const db= new pg.Client({
-    user: process.env.PG_USER,
-    host: process.env.PG_HOST,
-    database: process.env.PG_DATABASE,
-    password: process.env.PG_PASSWORD,
-    port: process.env.PG_PORT,
-});
-db.connect();
-
-async function getUsersLists(id){
-    const result=await db.query("SELECT lists.id ,lists_name, color FROM lists JOIN users ON users.id=lists.user_id WHERE users.id=$1;",
-    [id]);
-    return result.rows;
-  }
-
-  export {getUsersLists};
+async function addNewList(newList){
+    try{
+        const db=await getDb();
+        const result= await db.query("INSERT INTO lists (lists_name, user_id) VALUES ($1, $2) RETURNING *",
+            [newList.title,newList.user_id]
+        );
+        console.log(result.rows);
+        // const results=await db.query("INSERT INTO items (title,creation_date,lists_id,users_id,completed) VALUES ($1,$2,$3,$4,$5)",[])
+        return result.rows[0];
+    }catch(e){
+        console.log(e.message);     
+    }
+    
+}
+export {addNewList};
