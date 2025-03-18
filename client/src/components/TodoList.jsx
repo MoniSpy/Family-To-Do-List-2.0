@@ -38,7 +38,7 @@ function TodoList(props) {
    function deleteTask(id) {
     setTasks(tasks.filter(task => task.id !== id));
     }
-   
+
     function toggleCompleted(id) {
     setTasks(tasks.map(task => {
     if (task.id === id) {
@@ -67,10 +67,10 @@ function TodoList(props) {
                         name="text"
                         // onBlur={editTitle}
                         onChange={e => setTitle(e.target.value)} 
-                        placeholder="Title"  
+                        placeholder="List title.."  
                         value={title}
                     /> 
-                    <button className="deleteList" onClick={() => deleteList()}>
+                    <button className="deleteList" onClick={() => props.deleteList(props.id)}>
                         <DeleteIcon 
                             sx={{fontSize:40}}
                         />

@@ -12,8 +12,8 @@ async function getUserItems(userId){
           items.forEach((item) => {
             item.creation_date=getDate(item.creation_date);  
           });
-          console.log("users items");
-          console.log(items);
+          // console.log("users items");
+          // console.log(items);
          
           return items; 
       }
@@ -24,8 +24,8 @@ async function getUserLists(userId){
         const result=await db.query("SELECT lists.id ,lists_name, user_id FROM lists JOIN users ON users.id=lists.user_id WHERE users.id=$1;",
         [userId]);
         let lists=result.rows;
-        console.log("users lists");
-        console.log(lists);
+        // console.log("users lists");
+        // console.log(lists);
         return result.rows;
       }
 
