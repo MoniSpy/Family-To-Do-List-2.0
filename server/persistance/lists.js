@@ -32,4 +32,20 @@ async function deleteList(listId){
         res.status(400).send(e.message);    
     }
 }
-export {addNewList,deleteList };
+
+async function editList(listToEdit){
+    console.log("🚀 ~ editList ~ listToEdit:", listToEdit)
+    try{
+        const db=await getDb();
+        const edited= await db.query(
+            "UPDATE lists SET lists_name = $1 WHERE lists.id = $2 RETURNING * ;",
+            [listToEdit.name,listToEdit.id]  
+          );
+        return(edited.rows[0]);
+        
+    }catch(e){
+        console.log(e.message); 
+        res.status(400).send(e.message);    
+    }
+}
+export {addNewList, deleteList, editList };

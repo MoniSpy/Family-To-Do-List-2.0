@@ -40,10 +40,17 @@ async function addList(){
 }
 
 async function deleteList(listId){
- console.log(listId);
  const response= await axios.post(BASE_URL+"/deletelist", listId);
-  
 }
+
+async function editList(editListId, list_name){
+  const edited={
+    id:editListId,
+    listName:list_name
+  }
+  const response= await axios.post(BASE_URL+"/editlist",edited);
+}
+
 return (
     <div>
       <Header /> 
@@ -53,7 +60,6 @@ return (
       <div className="container">
         <div className="row">
           {lists?.map((list, index )=> {
-            // console.log(list);
             return (
                 <TodoList 
                   id={list.id}
@@ -62,6 +68,7 @@ return (
                   tasks={list.tasks}
                   title={list.lists_name}
                   onAdd={addTask}
+                  editList={editList}
                   deleteList={deleteList}
                 />
             );

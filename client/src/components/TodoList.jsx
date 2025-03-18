@@ -50,12 +50,10 @@ function TodoList(props) {
     }
 
 
-    // function editTitle(event){
-    //     console.log("editting title");
-    //     const {value} =event.target;
-    //     console.log(value);
-        
-    // }
+    function editTitle(event){
+        const {value} =event.target;
+        props.editList(props.id, value);
+    }
 
    return (
     <div className={props.className} style={props.style}>
@@ -65,7 +63,7 @@ function TodoList(props) {
                         className="title"
                         type="text"
                         name="text"
-                        // onBlur={editTitle}
+                        onBlur={editTitle}
                         onChange={e => setTitle(e.target.value)} 
                         placeholder="List title.."  
                         value={title}

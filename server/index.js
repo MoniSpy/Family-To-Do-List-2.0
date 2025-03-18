@@ -2,7 +2,7 @@ import express from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
 import { addNewItem ,getAllItems} from "./persistance/tasks.js";
-import {addNewList, deleteList} from "./persistance/lists.js";
+import {addNewList, deleteList, editList} from "./persistance/lists.js";
 import { getUserItems, getUserLists} from "./persistance/users.js";
 
 const app=express();
@@ -17,18 +17,14 @@ app.use(cors());
 app.get("/", async (req,res) =>{
     const tasks=await getUserItems(userId);
     const lists=await getUserLists(userId);
-    // console.log(tasks);
-    // console.log(lists);
     const listsById={
     }
     lists.forEach(list => {
-        listsById[list.id]={...list, tasks:[]}
-        // console.log(listsById);  
+        listsById[list.id]={...list, tasks:[]} 
     });
 
     tasks.forEach(task =>{
         listsById[task.lists_id.toString()].tasks=[...listsById[task.lists_id.toString()].tasks, task];
-        // console.log(JSON.stringify(listsById,null,4));
     });
     
     res.send(Object.values(listsById));
@@ -69,6 +65,16 @@ app.post("/deletelist", async(req,res)=>{
     const deleted=await deleteList(id);
     console.log("🚀 ~ app.post ~ deleted:", deleted);
     res.send(deleted); 
+});
+//Edit List
+app.post("/editlist", async (req,res) => {
+    const response=req.body;
+    const listToEdit={
+        id : req.body.id,
+        name: req.body.listName
+    }
+    const edited=await editList(listToEdit);
+    res.send(edited.lists_name);
 });
 
 app.listen(port, () =>{
