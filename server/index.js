@@ -46,6 +46,7 @@ app.post("/newlist" , async (req,res) => {
         title:" ",
         date:new Date(),
         completed:false,
+        
         lists_id:id,
         users_id:userId
     }
