@@ -19,13 +19,10 @@ async function deleteList(listId){
         const db=await getDb();
         const deletedItems=await db.query("DELETE FROM items WHERE lists_id=$1 RETURNING *; ",
             [listId]
-        );
-           console.log("🚀 ~ deleteList ~ deletedItems:", deletedItems.rows)
-           
+        ); 
         const deletedList=await db.query("DELETE FROM lists WHERE lists.id=$1 RETURNING *; ",
               [listId]
         );
-        console.log("🚀 ~ deleteList ~ deletedList:", deletedList.rows)
         return {deletedItems:deletedItems.rows, deletedList:deletedList.rows};
     }catch(e){
         console.log(e.message); 
@@ -34,7 +31,6 @@ async function deleteList(listId){
 }
 
 async function editList(listToEdit){
-    console.log("🚀 ~ editList ~ listToEdit:", listToEdit)
     try{
         const db=await getDb();
         const edited= await db.query(

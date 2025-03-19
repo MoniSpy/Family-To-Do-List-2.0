@@ -1,7 +1,7 @@
 import express from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
-import { addNewItem ,getAllItems} from "./persistance/tasks.js";
+import { addNewItem ,getAllItems} from "./persistance/items.js";
 import {addNewList, deleteList, editList} from "./persistance/lists.js";
 import { getUserItems, getUserLists} from "./persistance/users.js";
 
@@ -15,24 +15,25 @@ app.use(bodyParser.json());
 app.use(cors());
 
 app.get("/", async (req,res) =>{
-    const tasks=await getUserItems(userId);
+    const items=await getUserItems(userId);
     const lists=await getUserLists(userId);
     const listsById={
     }
+    
     lists.forEach(list => {
-        listsById[list.id]={...list, tasks:[]} 
+        listsById[list.id]={...list, items:[]} 
     });
 
-    tasks.forEach(task =>{
-        listsById[task.lists_id.toString()].tasks=[...listsById[task.lists_id.toString()].tasks, task];
+    items.forEach(item =>{
+        listsById[item.lists_id.toString()].items=[...listsById[item.lists_id.toString()].items, item];
     });
     
     res.send(Object.values(listsById));
 });
 
 
-//Add task
-app.post("/newtask" , async (req,res) =>{ 
+//Add item
+app.post("/newitem" , async (req,res) =>{ 
     const newItem=req.body;
     let items=await addNewItem(newItem);
     res.send(items); 
@@ -43,19 +44,20 @@ app.post("/newlist" , async (req,res) => {
     console.log("🚀 ~ app.post ~ response:", response)
     const id=response.id;
     const data = {
-        title:" ",
+        text:" ",
         date:new Date(),
         completed:false,
+        
         lists_id:id,
         users_id:userId
     }
-    const newTask=await addNewItem(data);
-    console.log("🚀 ~ app.post ~ newTask:", newTask);
+    const newItem=await addNewItem(data);
+    console.log("🚀 ~ app.post ~ newItem:", newItem);
     
     const newList={
         id:id,
         title:response.lists_name,
-        tasks:newTask
+        items:newItem
     }
     res.send(newList);
 });

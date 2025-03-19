@@ -9,16 +9,16 @@ function TodoList(props) {
 
     const [isVisible, setIsVisible]=useState(false);
 
-    const [tasks, setTasks] = useState(
-        props.tasks
+    const [items, setItems] = useState(
+        props.items
     );
 
     const [text, setText] = useState('');
 
     const [title, setTitle]=useState(props.title);
 
-    function submitTask(text) {
-        const newTask = {
+    function submitItem(text) {
+        const newItem = {
             id: Date.now(),
             text,
             completed: false
@@ -31,24 +31,23 @@ function TodoList(props) {
             users_id:9
         }
         props.onAdd(data);
-        setTasks([...tasks, newTask]);
+        setItems([...items, newItem]);
         setText('');
     }
 
-   function deleteTask(id) {
-    setTasks(tasks.filter(task => task.id !== id));
+   function deleteItem(id) {
+    setItems(items.filter(item => item.id !== id));
     }
 
     function toggleCompleted(id) {
-    setTasks(tasks.map(task => {
-    if (task.id === id) {
-        return {...task, completed: !task.completed};
+    setItems(items.map(item => {
+    if (item.id === id) {
+        return {...item, completed: !item.completed};
     } else {
-        return task;
+        return item;
     } 
     }));
     }
-
 
     function editTitle(event){
         const {value} =event.target;
@@ -76,23 +75,23 @@ function TodoList(props) {
                 </form>
                 
                 
-            {tasks.map(task => (
+            {items.map(item => (
                 <div className="item">
                     <TodoItem
-                        key={task.id} 
-                        task={task}
-                        deleteTask={deleteTask}
+                        key={item.id} 
+                        item={item}
+                        deleteItem={deleteItem}
                         toggleCompleted={toggleCompleted} 
                     />
                 </div>
             ))}
             <input
-                className="task"
+                className="item"
                 type="text"
                 value={text}
                 onChange={e => setText(e.target.value)} 
             />
-            <button className="add" onClick={() => submitTask(text)}>+</button>
+            <button className="add" onClick={() => submitItem(text)}>+</button>
         </div>
     </div>
     );

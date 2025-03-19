@@ -123,13 +123,13 @@ footer p {
     margin-right: 10px;
   }
 
-.deleteTask{
+.deleteItem{
   background-color: transparent;
   border: none;
   padding-left: 20px;
 }
 
-.task {
+.item{
   box-shadow: inset 0 -3px 0 0 #e5e5e5;
   text-align: left;
   height: 60px;
@@ -141,7 +141,7 @@ footer p {
   width: 80%;
   
 }
-.task:focus {
+.item:focus {
   
   outline: none;
   box-shadow: inset 0 -3px 0 0 #f5ba13;

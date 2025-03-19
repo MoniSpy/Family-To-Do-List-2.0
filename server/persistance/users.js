@@ -4,7 +4,7 @@ import { getDate } from "../helpers/helpers.js";
 //not sure if i need
 async function getUserItems(userId){
     const db=await getDb();
-        const result=await db.query("SELECT items.id , title, creation_date, lists_id, users_id FROM items JOIN users ON users.id = users_id WHERE users_id =($1) ORDER BY items.id ASC",
+        const result=await db.query("SELECT items.id , text, creation_date, lists_id, users_id FROM items JOIN users ON users.id = users_id WHERE users_id =($1) ORDER BY items.id ASC",
             [userId]
           );
           
