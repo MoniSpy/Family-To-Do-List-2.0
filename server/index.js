@@ -1,7 +1,7 @@
 import express from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
-import { addNewItem ,getAllItems} from "./persistance/items.js";
+import { addNewItem ,deleteItem} from "./persistance/items.js";
 import {addNewList, deleteList, editList} from "./persistance/lists.js";
 import { getUserItems, getUserLists} from "./persistance/users.js";
 
@@ -38,6 +38,13 @@ app.post("/newitem" , async (req,res) =>{
     let items=await addNewItem(newItem);
     res.send(items); 
 });
+
+//Delete Item
+app.delete("/deleteitem/:id", async (req,res) => {
+    const itemId=Number(req.params.id);
+    const result=await deleteItem(itemId);
+    res.send(result);
+})
 //Add new list
 app.post("/newlist" , async (req,res) => {
     const response=await addNewList(req.body);

@@ -3,12 +3,14 @@
   margin: 0;
   box-sizing: border-box;
 }
+
 html {
   font-family: "Montserrat", sans-serif;
   box-sizing: border-box;
   /* background-color: white; */
   min-height: 1000px;
 }
+
 body {
   min-height: 95vh;
   background: #eee;
@@ -129,7 +131,7 @@ footer p {
   padding-left: 20px;
 }
 
-.item{
+.newItem {
   box-shadow: inset 0 -3px 0 0 #e5e5e5;
   text-align: left;
   height: 60px;
@@ -139,13 +141,13 @@ footer p {
   font-size: 20px;
   font-weight: 200;
   width: 80%;
-  
 }
-.item:focus {
-  
+
+.newItem:focus {
   outline: none;
   box-shadow: inset 0 -3px 0 0 #f5ba13;
 }
+
 .item {
   min-height: 70px;
   display: flex;

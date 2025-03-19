@@ -23,6 +23,10 @@ async function addItem(newItem) {
     const response =await axios.post(BASE_URL+"/newitem", newItem); 
     return response.data;
   }
+
+ async function deleteItem(itemId){
+  const response= await axios.delete(BASE_URL+`/deleteitem/${itemId}`);
+ } 
   
 async function addList(){
   const newL={
@@ -70,6 +74,7 @@ return (
                   onAdd={addItem}
                   editList={editList}
                   deleteList={deleteList}
+                  deleteItem={deleteItem}
                 />
             );
           })}

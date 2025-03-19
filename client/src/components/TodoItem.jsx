@@ -7,6 +7,7 @@ function handleChange() {
     toggleCompleted(item.id);
  }
  
+
  return (
     <div className="todo-item">
      <input 
