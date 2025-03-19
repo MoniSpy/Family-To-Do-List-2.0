@@ -19,8 +19,8 @@ useEffect(()=>{
     }
   },[lists]);
 
-async function addTask(newItem) {
-    const response =await axios.post(BASE_URL+"/newtask", newItem); 
+async function addItem(newItem) {
+    const response =await axios.post(BASE_URL+"/newitem", newItem); 
     return response.data;
   }
   
@@ -34,7 +34,7 @@ async function addList(){
   const result={
     id:newList.id,
     title:newList.title,
-    tasks:newList.tasks
+    items:newList.items
   }
   setLists([...lists, result]);
 }
@@ -65,9 +65,9 @@ return (
                   id={list.id}
                   className="col-sm-4"
                   key={index}
-                  tasks={list.tasks}
+                  items={list.items}
                   title={list.lists_name}
-                  onAdd={addTask}
+                  onAdd={addItem}
                   editList={editList}
                   deleteList={deleteList}
                 />
