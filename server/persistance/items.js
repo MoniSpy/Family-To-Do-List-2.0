@@ -15,6 +15,7 @@ async function addNewItem (newItem){
         console.log(e.message); 
     }
 }
+
  async function getAllItems(){
     try{
         const db=await getDb();
