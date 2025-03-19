@@ -25,27 +25,30 @@ async function addTask(newItem) {
   }
   
 async function addList(){
-  console.log("add new list process");
-    const newList={
+  const newL={
     title:"New list title..",
-    user_id:9,
-    
+    user_id:userId,
   }
-
-  const response= await axios.post(BASE_URL+"/newlist", newList);
-  console.log("response data");
-  console.log(response.data);
+  const response= await axios.post(BASE_URL+"/newlist", newL);
+  const newList=response.data;
   const result={
-    id:response.data,
+    id:newList.id,
     title:newList.title,
-    list:[{
-      text:" ",
-      completed:false,
-      user_id:userId,
-      lists_id:response.data
-    }]
+    tasks:newList.tasks
   }
   setLists([...lists, result]);
+}
+
+async function deleteList(listId){
+ const response= await axios.post(BASE_URL+"/deletelist", listId);
+}
+
+async function editList(editListId, list_name){
+  const edited={
+    id:editListId,
+    listName:list_name
+  }
+  const response= await axios.post(BASE_URL+"/editlist",edited);
 }
 
 return (
@@ -57,7 +60,6 @@ return (
       <div className="container">
         <div className="row">
           {lists?.map((list, index )=> {
-            console.log(list);
             return (
                 <TodoList 
                   id={list.id}
@@ -66,6 +68,8 @@ return (
                   tasks={list.tasks}
                   title={list.lists_name}
                   onAdd={addTask}
+                  editList={editList}
+                  deleteList={deleteList}
                 />
             );
           })}

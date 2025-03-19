@@ -2,7 +2,7 @@ import express from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
 import { addNewItem ,getAllItems} from "./persistance/tasks.js";
-import {addNewList} from "./persistance/lists.js";
+import {addNewList, deleteList, editList} from "./persistance/lists.js";
 import { getUserItems, getUserLists} from "./persistance/users.js";
 
 const app=express();
@@ -13,27 +13,18 @@ const userId=9;
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cors());
+
 app.get("/", async (req,res) =>{
-    
-    // const tasks=await getAllItems();
     const tasks=await getUserItems(userId);
-    
     const lists=await getUserLists(userId);
-    console.log(tasks);
-    console.log(lists);
-
     const listsById={
-
     }
-
     lists.forEach(list => {
-        listsById[list.id]={...list, tasks:[]}
-        console.log(listsById);  
+        listsById[list.id]={...list, tasks:[]} 
     });
 
     tasks.forEach(task =>{
         listsById[task.lists_id.toString()].tasks=[...listsById[task.lists_id.toString()].tasks, task];
-        console.log(JSON.stringify(listsById,null,4));
     });
     
     res.send(Object.values(listsById));
@@ -46,10 +37,11 @@ app.post("/newtask" , async (req,res) =>{
     let items=await addNewItem(newItem);
     res.send(items); 
 });
-
+//Add new list
 app.post("/newlist" , async (req,res) => {
-    const newList=await addNewList(req.body);
-    const id=newList.id;
+    const response=await addNewList(req.body);
+    console.log("🚀 ~ app.post ~ response:", response)
+    const id=response.id;
     const data = {
         title:" ",
         date:new Date(),
@@ -57,11 +49,32 @@ app.post("/newlist" , async (req,res) => {
         lists_id:id,
         users_id:userId
     }
-    const newTask=await addNewItem(data)
-    console.log(newList);
+    const newTask=await addNewItem(data);
+    console.log("🚀 ~ app.post ~ newTask:", newTask);
     
-    res.send(id.toString());
-
+    const newList={
+        id:id,
+        title:response.lists_name,
+        tasks:newTask
+    }
+    res.send(newList);
+});
+//Delete list 
+app.post("/deletelist", async(req,res)=>{
+    const id=Number(Object.keys(req.body));
+    const deleted=await deleteList(id);
+    console.log("🚀 ~ app.post ~ deleted:", deleted);
+    res.send(deleted); 
+});
+//Edit List
+app.post("/editlist", async (req,res) => {
+    const response=req.body;
+    const listToEdit={
+        id : req.body.id,
+        name: req.body.listName
+    }
+    const edited=await editList(listToEdit);
+    res.send(edited.lists_name);
 });
 
 app.listen(port, () =>{

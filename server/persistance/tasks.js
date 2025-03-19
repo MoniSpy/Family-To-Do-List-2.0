@@ -7,8 +7,8 @@ async function addNewItem (newItem){
         const result= await db.query(`INSERT INTO items (title, creation_date, lists_id, users_id, completed) VALUES ($1, $2, $3, $4, $5) RETURNING *`,
             [newItem.title,newItem.date,newItem.lists_id,newItem.users_id,newItem.completed]
         );
-        console.log("logging database response");
-        console.log(result.rows);
+        // console.log("logging database response");
+        // console.log(result.rows);
         return result.rows; 
 
     }catch(e){
