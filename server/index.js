@@ -1,10 +1,10 @@
 import express from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
-import { addNewItem ,getAllItems} from "./persistance/items.js";
+import { addNewItem ,deleteItem, editItem} from "./persistance/items.js";
 import {addNewList, deleteList, editList} from "./persistance/lists.js";
 import { getUserItems, getUserLists} from "./persistance/users.js";
-
+import { getDate } from "./helpers/helpers.js";
 const app=express();
 const port= 3000;
 const userId=9;
@@ -37,6 +37,25 @@ app.post("/newitem" , async (req,res) =>{
     const newItem=req.body;
     let items=await addNewItem(newItem);
     res.send(items); 
+});
+
+//Delete Item
+app.delete("/deleteitem/:id", async (req,res) => {
+    const itemId=Number(req.params.id);
+    const result=await deleteItem(itemId);
+    res.send(result);
+});
+
+//Edit Item
+app.patch("/edititem/:id", async (req,res) => {
+    const text=Object.keys(req.body);
+    const item={
+        id:Number(req.params.id),
+        text:text.toString(),
+        creation_date:getDate(new Date())
+    }
+    const result=await editItem(item);
+    
 });
 //Add new list
 app.post("/newlist" , async (req,res) => {

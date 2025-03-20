@@ -1,13 +1,10 @@
-import react from "react";
 import { useState } from "react";
 import TodoItem from "./TodoItem";
 import { getDate } from "../../../server/helpers/helpers";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 
 function TodoList(props) {
-    
 
-    const [isVisible, setIsVisible]=useState(false);
 
     const [items, setItems] = useState(
         props.items
@@ -17,17 +14,17 @@ function TodoList(props) {
 
     const [title, setTitle]=useState(props.title);
 
-    function submitItem(text) {
+    function submitItem(text, listsId) {
         const newItem = {
             id: Date.now(),
             text,
             completed: false
         };
         const data = {
-            title:text,
+            text:text,
             date:getDate(new Date()),
             completed:false,
-            lists_id:13,
+            lists_id:listsId,
             users_id:9
         }
         props.onAdd(data);
@@ -53,7 +50,7 @@ function TodoList(props) {
         const {value} =event.target;
         props.editList(props.id, value);
     }
-
+  
    return (
     <div className={props.className} style={props.style}>
         <div className="box"> 
@@ -73,25 +70,39 @@ function TodoList(props) {
                         />
                     </button>
                 </form>
-                
-                
+
             {items.map(item => (
                 <div className="item">
                     <TodoItem
                         key={item.id} 
                         item={item}
-                        deleteItem={deleteItem}
+                        deleteItem={(id) => {
+                            deleteItem(id)
+                            props.deleteItem(id)
+                        }} 
                         toggleCompleted={toggleCompleted} 
+                        editItem={(text,id,persist) =>  {
+                            props.editItem(text,id,persist);
+                            setItems(items.map(item=>{ 
+                                if (item.id==id){
+                                    return{
+                                        ...item, 
+                                        text
+                                    }
+                                }
+                                return item
+                            }));
+                        }}
                     />
                 </div>
             ))}
             <input
-                className="item"
+                className="newItem"
                 type="text"
                 value={text}
                 onChange={e => setText(e.target.value)} 
             />
-            <button className="add" onClick={() => submitItem(text)}>+</button>
+            <button className="add" onClick={() => submitItem(text, props.id)}>+</button>
         </div>
     </div>
     );
