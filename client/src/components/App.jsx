@@ -20,12 +20,32 @@ useEffect(()=>{
   },[lists]);
 
 async function addItem(newItem) {
-    const response =await axios.post(BASE_URL+"/newitem", newItem); 
-    return response.data;
-  }
+
+    try{
+      const response =await axios.post(BASE_URL+"/newitem", newItem); 
+      return response.data;
+    }catch(e){
+      console.log(e.message);
+      }
+    }   
+  
+  async function editItem(text, itemId, persist){
+    if (persist){
+
+      try{
+        const response=await axios.patch(BASE_URL+`/edititem/${itemId}`, text);
+      }catch(e){
+        console.log(e.message);
+      } 
+    }
+}
 
  async function deleteItem(itemId){
-  const response= await axios.delete(BASE_URL+`/deleteitem/${itemId}`);
+  try{
+    const response= await axios.delete(BASE_URL+`/deleteitem/${itemId}`);
+  }catch(e){
+    console.log(e.message);
+  }
  } 
   
 async function addList(){
@@ -33,18 +53,26 @@ async function addList(){
     title:"New list title..",
     user_id:userId,
   }
-  const response= await axios.post(BASE_URL+"/newlist", newL);
-  const newList=response.data;
-  const result={
-    id:newList.id,
-    title:newList.title,
-    items:newList.items
+  try{
+    const response= await axios.post(BASE_URL+"/newlist", newL);
+    const newList=response.data;
+    const result={
+      id:newList.id,
+      title:newList.title,
+      items:newList.items
+    }
+    setLists([...lists, result]);
+  }catch(e){
+    console.log(e.message);
   }
-  setLists([...lists, result]);
 }
 
 async function deleteList(listId){
- const response= await axios.post(BASE_URL+"/deletelist", listId);
+  try{
+    const response= await axios.post(BASE_URL+"/deletelist", listId);
+  }catch(e){
+    console.log(e.message);
+  }
 }
 
 async function editList(editListId, list_name){
@@ -52,7 +80,11 @@ async function editList(editListId, list_name){
     id:editListId,
     listName:list_name
   }
-  const response= await axios.post(BASE_URL+"/editlist",edited);
+  try{
+    const response= await axios.post(BASE_URL+"/editlist",edited);
+  }catch(e){
+    console.log(e.message);
+  }
 }
 
 return (
@@ -75,6 +107,7 @@ return (
                   editList={editList}
                   deleteList={deleteList}
                   deleteItem={deleteItem}
+                  editItem={editItem}
                 />
             );
           })}

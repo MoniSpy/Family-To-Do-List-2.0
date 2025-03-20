@@ -4,7 +4,6 @@ import { getDate } from "../../../server/helpers/helpers";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 
 function TodoList(props) {
-    
 
 
     const [items, setItems] = useState(
@@ -51,7 +50,7 @@ function TodoList(props) {
         const {value} =event.target;
         props.editList(props.id, value);
     }
-
+  
    return (
     <div className={props.className} style={props.style}>
         <div className="box"> 
@@ -82,6 +81,18 @@ function TodoList(props) {
                             props.deleteItem(id)
                         }} 
                         toggleCompleted={toggleCompleted} 
+                        editItem={(text,id,persist) =>  {
+                            props.editItem(text,id,persist);
+                            setItems(items.map(item=>{ 
+                                if (item.id==id){
+                                    return{
+                                        ...item, 
+                                        text
+                                    }
+                                }
+                                return item
+                            }));
+                        }}
                     />
                 </div>
             ))}

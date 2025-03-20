@@ -28,4 +28,17 @@ async function deleteItem(itemId){
 
 }
 
-export {addNewItem, deleteItem};
+async function editItem(item){
+    try{
+        const db=await getDb();
+        const result=await db.query( "UPDATE items SET text = $1, creation_date= $2  WHERE items.id = $3 RETURNING * ;",
+            [item.text,item.creation_date,item.id]);
+       console.log(result.rows);
+            return result.rows; 
+    }catch(e){
+        console.log(e.message); 
+    }
+
+}
+
+export {addNewItem, deleteItem, editItem};
