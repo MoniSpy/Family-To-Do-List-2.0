@@ -5,7 +5,7 @@ import TodoList from "./TodoList";
 import axios from "axios";
 
 const BASE_URL= "http://localhost:3000";
-const userId=9;
+let userId=9;
 
 function App() {
 
@@ -47,6 +47,16 @@ async function addItem(newItem) {
     console.log(e.message);
   }
  } 
+
+ async function addUser(){
+  const users_name="Maria";
+  try{
+    const response=await axios.post(BASE_URL+"/newuser",{users_name} );
+    const newUser=response.data;
+  }catch(e){
+    console.log(e.message);
+  }
+ }
   
 async function addList(){
   const newL={
@@ -92,6 +102,9 @@ return (
       <Header /> 
       <div className="newList" >
           <button  onClick={() => addList ()}>New List</button>
+      </div>
+      <div className="newList" >
+          <button  onClick={() => addUser ()}>New User</button>
       </div>
       <div className="container">
         <div className="row">

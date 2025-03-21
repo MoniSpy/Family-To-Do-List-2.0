@@ -3,7 +3,7 @@ import bodyParser from "body-parser";
 import cors from "cors";
 import { addNewItem ,deleteItem, editItem} from "./persistance/items.js";
 import {addNewList, deleteList, editList} from "./persistance/lists.js";
-import { getUserItems, getUserLists} from "./persistance/users.js";
+import { getUserItems, getUserLists, addUser} from "./persistance/users.js";
 import { getDate } from "./helpers/helpers.js";
 const app=express();
 const port= 3000;
@@ -31,6 +31,14 @@ app.get("/", async (req,res) =>{
     res.send(Object.values(listsById));
 });
 
+//Add User 
+app.post("/newuser", async (req,res) => {
+    const usersName=req.body.users_name;
+    console.log("🚀 ~ app.post ~ usersName:", usersName);
+    const newUser=  await addUser(usersName);
+    console.log("🚀 ~ app.post ~ newUser:", newUser);
+    res.send(newUser);
+});
 
 //Add item
 app.post("/newitem" , async (req,res) =>{ 
@@ -57,6 +65,7 @@ app.patch("/edititem/:id", async (req,res) => {
     const result=await editItem(item);
     
 });
+
 //Add new list
 app.post("/newlist" , async (req,res) => {
     const response=await addNewList(req.body);
