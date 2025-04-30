@@ -21,7 +21,7 @@ async function deleteItem(itemId){
         const result=await db.query("DELETE FROM items WHERE items.id=$1 RETURNING *; ",
             [itemId]);
         return result.rows; 
-    }catch{
+    }catch(e){
         console.log(e.message); 
         res.status(400).send(e.message);
     }
