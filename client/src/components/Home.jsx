@@ -4,8 +4,6 @@ import Footer from "./Footer";
 import { Link } from "react-router-dom";
 
 
-
-
 function Home(){
 async function register(){ 
     console.log("register");
@@ -14,6 +12,7 @@ async function register(){
 async function login(){
     console.log("login");
 }
+
     return(
         <div>
             <Header/>
