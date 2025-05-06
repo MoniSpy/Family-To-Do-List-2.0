@@ -185,3 +185,36 @@ footer p {
   margin-top: 30px;
 
 }
+
+.butt{
+  display: flex;
+  justify-content: center;
+  margin-top: 30px;
+}
+
+.butt >button{
+  border-radius: 50px;
+  background-color: #f5ba13;
+  color: #fff;
+  font-family: "McLaren", cursive;
+  font-weight: 200;
+  border-color: transparent;
+  padding: 20px;
+  font-size: 36px;
+}
+
+
+.main{
+    display: flex;
+    flex-direction: column;
+    padding: 100px 0px 100px 0px;
+}
+
+.listIcon{
+  color:#fdfbf7;
+}
+.header{
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+}
