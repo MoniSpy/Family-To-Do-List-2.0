@@ -55,8 +55,6 @@ function Form() {
  }; 
   return(
     <div>
-
-   
     <Header />
     <div className="registerForm"> 
      <form onSubmit={handleSubmit}> 

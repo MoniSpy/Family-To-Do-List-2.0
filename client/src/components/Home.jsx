@@ -3,6 +3,9 @@ import Header from "./Header";
 import Footer from "./Footer";
 import { Link } from "react-router-dom";
 
+
+
+
 function Home(){
 async function register(){ 
     console.log("register");
@@ -14,16 +17,19 @@ async function login(){
     return(
         <div>
             <Header/>
-                <Link to="/register">
-                    <div className="newList" >
-                        <button  onClick={() => register ()}>Register</button>
-                    </div>
-                </Link>
-                <Link to="/login">
-                    <div className="newList" >
-                        <button  onClick={() => login()}>Login</button>
-                    </div>
-                </Link>
+                <div className="main">
+                
+                    <Link style={{ textDecoration: 'none' }} to="/register">
+                        <div className="butt" >
+                            <button  onClick={() => register ()}>Register</button>
+                        </div>
+                    </Link>
+                    <Link style={{ textDecoration: 'none' }} to="/login">
+                        <div className="butt" >
+                            <button  onClick={() => login()}>Login</button>
+                        </div>
+                    </Link>
+                </div>
             <Footer/>
         </div>
     );
