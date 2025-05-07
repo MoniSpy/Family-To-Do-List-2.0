@@ -1,11 +1,23 @@
-.registerForm {
-    display: flex;
-    flex: 1;
-    height: 100vh;
-    justify-content: center;
-    align-items: center;
-  }
+.googleAuth button{
+ 
+    border-radius: 50px;
+    background-color: #f5ba13;
+    
+    font-family: "McLaren", cursive;
+    font-weight: 200;
+    border-color: transparent;
+    padding: 20px;
+    font-size: 36px;
   
+}
+.googleAuth a{
+  color: #fff;
+  display: flex;
+  flex-direction: row-reverse;
+  text-decoration: none;
+}
+
+
   fieldset {
     display: flex;
     width: 480px;

@@ -1,8 +1,7 @@
 import React from "react";
-import "../../public/form.css";
-import Header from "./Header";
-import Footer from "./Footer";
 import {useState} from "react"; 
+import { FaGoogle } from "react-icons/fa";
+
 
 const validateEmail = (email) => {
     return String(email)
@@ -18,7 +17,22 @@ const validateEmail = (email) => {
     ); 
    }; 
 
-function Form() {
+function GoogleAuth(){
+    return (     
+    <div className="googleAuth">
+        <button style={{margin:"20px", padding:"30px"}}> 
+            <a  href="/auth/google" >
+             Sign Up with Google
+             <FaGoogle size={50} style={{ marginRight: "20px"}}/>
+            </a>
+         
+        </button>  
+        
+    </div>
+    );
+}
+
+function RegisterForm(){
     const [firstName, setFirstName] = useState(""); 
     const [lastName, setLastName] = useState(""); 
     const [email, setEmail] = useState(""); 
@@ -26,37 +40,34 @@ function Form() {
         value: "", 
         isTouched: false, 
  }); 
- 
-
 
  const getIsFormValid = () => { 
-   return ( 
-     firstName && 
-     validateEmail(email) && 
-     password.value.length >= 8 
-   ); 
- }; 
- 
- const clearForm = () => { 
-   setFirstName(""); 
-   setLastName(""); 
-   setEmail(""); 
-   setPassword({ 
-     value: "", 
-     isTouched: false, 
-   }); 
-   
- }; 
- 
- const handleSubmit = (e) => { 
-   e.preventDefault(); 
-   alert("Account created!"); 
-   clearForm(); 
- }; 
-  return(
-    <div>
-    <Header />
-    <div className="registerForm"> 
+    return ( 
+      firstName && 
+      validateEmail(email) && 
+      password.value.length >= 8 
+    ); 
+  }; 
+  
+  const clearForm = () => { 
+    setFirstName(""); 
+    setLastName(""); 
+    setEmail(""); 
+    setPassword({ 
+      value: "", 
+      isTouched: false, 
+    }); 
+    
+  }; 
+  
+  const handleSubmit = (e) => { 
+    e.preventDefault(); 
+    alert("Account created!"); 
+    clearForm(); 
+  }; 
+
+    return (
+    <div> 
      <form onSubmit={handleSubmit}> 
        <fieldset> 
          <h2>Sign Up</h2> 
@@ -115,14 +126,13 @@ function Form() {
          </div> 
        
          <button class="submit" type="submit" disabled={!getIsFormValid()}> 
-           Create account 
+           Register 
          </button> 
        </fieldset> 
      </form> 
    </div> 
-   <Footer/>
-   </div>
- ); 
-} 
+        
+    );
+}
 
-export default Form;
+export {GoogleAuth,RegisterForm};

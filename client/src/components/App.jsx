@@ -1,8 +1,8 @@
 import React from "react";
-import Form from "./Form";
 import Home from "./Home";
 import Footer from "./Footer";
 import {BrowserRouter, Route, Routes} from "react-router-dom";
+import Register from "./Register";
 
 
 function App() {
@@ -10,7 +10,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route exact path="/" element={<Home/>}/>
-        <Route path="/register" element={<Form/>}/>
+        <Route path="/register" element={<Register/>}/>
         <Route path="/login" element={<Footer/>}/>
       </Routes>
     </BrowserRouter>
