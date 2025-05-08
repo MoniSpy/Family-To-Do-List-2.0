@@ -1,5 +1,4 @@
 .googleAuth button{
- 
     border-radius: 50px;
     background-color: #f5ba13;
     
@@ -68,7 +67,7 @@
     flex-direction: row;
   }
   
-button:disabled,  button[disabled]{
+ button:disabled,  button[disabled]{
     border-radius: 50px;
     background-color: #f5ba13;
     color: #fff;
@@ -82,5 +81,13 @@ button:disabled,  button[disabled]{
     display: flex;
     justify-content: center;
     margin-top: 30px;
+    border-radius: 50px;
+    background-color: #f5ba13;
+    color: #fff;
+    font-family: "McLaren", cursive;
+    font-weight: 200;
+    border-color: transparent;
+    padding: 20px;
+    font-size: 36px;
   
   }

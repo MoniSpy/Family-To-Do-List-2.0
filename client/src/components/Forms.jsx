@@ -1,7 +1,9 @@
 import React from "react";
+import axios from "axios";
 import {useState} from "react"; 
 import { FaGoogle } from "react-icons/fa";
 
+const BASE_URL= "http://localhost:3000";
 
 const validateEmail = (email) => {
     return String(email)
@@ -11,7 +13,7 @@ const validateEmail = (email) => {
       );
   };
 
-  const PasswordErrorMessage = () => { 
+const PasswordErrorMessage = () => { 
     return ( 
       <p className="FieldError">Password should have at least 8 characters</p> 
     ); 
@@ -19,16 +21,15 @@ const validateEmail = (email) => {
 
 function GoogleAuth(){
     return (     
-    <div className="googleAuth">
-        <button style={{margin:"20px", padding:"30px"}}> 
-            <a  href="/auth/google" >
-             Sign Up with Google
-             <FaGoogle size={50} style={{ marginRight: "20px"}}/>
-            </a>
-         
-        </button>  
-        
-    </div>
+        <div className="googleAuth">
+            <button style={{margin:"20px", padding:"30px"}}> 
+                <a  href="/auth/google" >
+                    Sign Up with Google
+                    <FaGoogle size={50} style={{ marginRight: "20px"}}/>
+                </a>
+            
+            </button>  
+        </div>
     );
 }
 
@@ -57,12 +58,28 @@ function RegisterForm(){
       value: "", 
       isTouched: false, 
     }); 
-    
   }; 
   
-  const handleSubmit = (e) => { 
+
+  
+async function handleSubmit(e){
     e.preventDefault(); 
-    alert("Account created!"); 
+    const newUser={
+        firstName:firstName,
+        lastName:lastName,
+        password:password.value,
+        email
+    }
+    console.log(newUser);
+    try{
+        const response=  await axios.post(BASE_URL+"/register", {newUser});
+        const user=response.data;
+        console.log(user);
+    }catch(e){
+        console.log(e.message);
+    }
+
+
     clearForm(); 
   }; 
 
@@ -70,7 +87,7 @@ function RegisterForm(){
     <div> 
      <form onSubmit={handleSubmit}> 
        <fieldset> 
-         <h2>Sign Up</h2> 
+         <h2>Register</h2> 
          <div className="Field"> 
            <label> 
              First name <sup>*</sup> 
@@ -125,7 +142,7 @@ function RegisterForm(){
            ) : null} 
          </div> 
        
-         <button class="submit" type="submit" disabled={!getIsFormValid()}> 
+         <button className="submit" type="submit" disabled={!getIsFormValid()}> 
            Register 
          </button> 
        </fieldset> 

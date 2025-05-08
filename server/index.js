@@ -40,6 +40,15 @@ app.post("/newuser", async (req,res) => {
     res.send(newUser);
 });
 
+//register a new user
+app.post("/register", async (req,res) => {
+    const newUser=req.body.newUser;
+    console.log(newUser);
+    const user= await addUser(newUser);
+    console.log(user);
+    res.send(user);
+});
+
 //Add item
 app.post("/newitem" , async (req,res) =>{ 
     const newItem=req.body;

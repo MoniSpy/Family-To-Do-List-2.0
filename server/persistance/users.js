@@ -3,11 +3,11 @@ import { getDate } from "../helpers/helpers.js";
 
 
 
-async function addUser(usersName){
+async function addUser(newUser){
   try {
     const db=await getDb();
-    const result=await db.query( "INSERT INTO users ( users_name) VALUES($1) RETURNING *;",
-      [usersName]   
+    const result=await db.query( "INSERT INTO users ( email, password, first_name, last_name) VALUES($1, $2 ,$3, $4) RETURNING *;",
+      [newUser.email,newUser.password,newUser.firstName, newUser.lastName]   
     );
     return result.rows[0]; 
 

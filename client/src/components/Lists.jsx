@@ -52,15 +52,15 @@ async function addItem(newItem) {
   }
  } 
 
- async function addUser(){
-  const users_name="Maria";
-  try{
-    const response=await axios.post(BASE_URL+"/newuser",{users_name} );
-    const newUser=response.data;
-  }catch(e){
-    console.log(e.message);
-  }
- }
+//  async function addUser(){
+//   const users_name="Maria";
+//   try{
+//     const response=await axios.post(BASE_URL+"/newuser",{users_name} );
+//     const newUser=response.data;
+//   }catch(e){
+//     console.log(e.message);
+//   }
+//  }
   
 async function addList(){
   const newL={
@@ -107,9 +107,9 @@ return (
       <div className="newList" >
           <button  onClick={() => addList ()}>New List</button>
       </div>
-      <div className="newList" >
+      {/* <div className="newList" >
           <button  onClick={() => addUser ()}>New User</button>
-      </div>
+      </div> */}
       <div className="container">
         <div className="row">
           {lists?.map((list, index )=> {
