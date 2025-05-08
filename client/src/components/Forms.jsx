@@ -1,8 +1,9 @@
 import React from "react";
-import "../../public/form.css";
-import Header from "./Header";
-import Footer from "./Footer";
+import axios from "axios";
 import {useState} from "react"; 
+import { FaGoogle } from "react-icons/fa";
+
+const BASE_URL= "http://localhost:3000";
 
 const validateEmail = (email) => {
     return String(email)
@@ -12,13 +13,27 @@ const validateEmail = (email) => {
       );
   };
 
-  const PasswordErrorMessage = () => { 
+const PasswordErrorMessage = () => { 
     return ( 
       <p className="FieldError">Password should have at least 8 characters</p> 
     ); 
    }; 
 
-function Form() {
+function GoogleAuth(){
+    return (     
+        <div className="googleAuth">
+            <button style={{margin:"20px", padding:"30px"}}> 
+                <a  href="/auth/google" >
+                    Sign Up with Google
+                    <FaGoogle size={50} style={{ marginRight: "20px"}}/>
+                </a>
+            
+            </button>  
+        </div>
+    );
+}
+
+function RegisterForm(){
     const [firstName, setFirstName] = useState(""); 
     const [lastName, setLastName] = useState(""); 
     const [email, setEmail] = useState(""); 
@@ -26,40 +41,53 @@ function Form() {
         value: "", 
         isTouched: false, 
  }); 
- 
-
 
  const getIsFormValid = () => { 
-   return ( 
-     firstName && 
-     validateEmail(email) && 
-     password.value.length >= 8 
-   ); 
- }; 
- 
- const clearForm = () => { 
-   setFirstName(""); 
-   setLastName(""); 
-   setEmail(""); 
-   setPassword({ 
-     value: "", 
-     isTouched: false, 
-   }); 
-   
- }; 
- 
- const handleSubmit = (e) => { 
-   e.preventDefault(); 
-   alert("Account created!"); 
-   clearForm(); 
- }; 
-  return(
-    <div>
-    <Header />
-    <div className="registerForm"> 
+    return ( 
+      firstName && 
+      validateEmail(email) && 
+      password.value.length >= 8 
+    ); 
+  }; 
+  
+  const clearForm = () => { 
+    setFirstName(""); 
+    setLastName(""); 
+    setEmail(""); 
+    setPassword({ 
+      value: "", 
+      isTouched: false, 
+    }); 
+  }; 
+  
+
+  
+async function handleSubmit(e){
+    e.preventDefault(); 
+    const newUser={
+        firstName:firstName,
+        lastName:lastName,
+        password:password.value,
+        email
+    }
+    console.log(newUser);
+    try{
+        const response=  await axios.post(BASE_URL+"/register", {newUser});
+        const user=response.data;
+        console.log(user);
+    }catch(e){
+        console.log(e.message);
+    }
+
+
+    clearForm(); 
+  }; 
+
+    return (
+    <div> 
      <form onSubmit={handleSubmit}> 
        <fieldset> 
-         <h2>Sign Up</h2> 
+         <h2>Register</h2> 
          <div className="Field"> 
            <label> 
              First name <sup>*</sup> 
@@ -114,15 +142,14 @@ function Form() {
            ) : null} 
          </div> 
        
-         <button class="submit" type="submit" disabled={!getIsFormValid()}> 
-           Create account 
+         <button className="submit" type="submit" disabled={!getIsFormValid()}> 
+           Register 
          </button> 
        </fieldset> 
      </form> 
    </div> 
-   <Footer/>
-   </div>
- ); 
-} 
+        
+    );
+}
 
-export default Form;
+export {GoogleAuth,RegisterForm};
