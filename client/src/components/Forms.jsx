@@ -19,12 +19,93 @@ const PasswordErrorMessage = () => {
     ); 
    }; 
 
-function GoogleAuth(){
+
+
+function  LoginForm(){
+    const [email, setEmail] = useState(""); 
+    const [password, setPassword] = useState({ 
+        value: "", 
+        isTouched: false, 
+ }); 
+
+ const getIsFormValid = () => { 
+    return ( 
+      validateEmail(email) && 
+      password.value.length >= 8 
+    ); 
+  }; 
+  
+  const clearForm = () => { 
+    setEmail(""); 
+    setPassword({ 
+      value: "", 
+      isTouched: false, 
+    }); 
+  }; 
+  
+  
+async function handleSubmitLogin(e){
+    e.preventDefault(); 
+    const user={
+        email:email,
+        password:password.value
+    }
+    console.log("logging in" , user);
+    clearForm(); 
+  }; 
+    return(
+        <div> 
+        <form onSubmit={handleSubmitLogin}> 
+          <fieldset> 
+            <h2>Login</h2> 
+            <div className="Field"> 
+              <label> 
+                Email address <sup>*</sup> 
+              </label> 
+              <input 
+                value={email} 
+                onChange={(e) => { 
+                  setEmail(e.target.value); 
+                }} 
+                placeholder="Email address" 
+              /> 
+            </div> 
+            <div className="Field"> 
+              <label> 
+                Password <sup>*</sup> 
+              </label> 
+              <input 
+                value={password.value} 
+                type="password" 
+                onChange={(e) => { 
+                  setPassword({ ...password, value: e.target.value }); 
+                }} 
+                onBlur={() => { 
+                  setPassword({ ...password, isTouched: true }); 
+                }} 
+                placeholder="Password" 
+              /> 
+              {password.isTouched && password.value.length < 8 ? ( 
+                <PasswordErrorMessage /> 
+              ) : null} 
+            </div> 
+          
+            <button className="submit" type="submit" disabled={!getIsFormValid()}> 
+              Login
+            </button> 
+          </fieldset> 
+        </form> 
+      </div> 
+    );
+}
+// sign in with google form
+function GoogleAuth(props){
+   const text=props.text;
     return (     
         <div className="googleAuth">
             <button style={{margin:"20px", padding:"30px"}}> 
                 <a  href="/auth/google" >
-                    Sign Up with Google
+                    {text}
                     <FaGoogle size={50} style={{ marginRight: "20px"}}/>
                 </a>
             
@@ -33,6 +114,8 @@ function GoogleAuth(){
     );
 }
 
+
+// register user form 
 function RegisterForm(){
     const [firstName, setFirstName] = useState(""); 
     const [lastName, setLastName] = useState(""); 
@@ -60,9 +143,8 @@ function RegisterForm(){
     }); 
   }; 
   
-
   
-async function handleSubmit(e){
+async function handleSubmitRegister(e){
     e.preventDefault(); 
     const newUser={
         firstName:firstName,
@@ -82,10 +164,9 @@ async function handleSubmit(e){
 
     clearForm(); 
   }; 
-
     return (
     <div> 
-     <form onSubmit={handleSubmit}> 
+     <form onSubmit={handleSubmitRegister}> 
        <fieldset> 
          <h2>Register</h2> 
          <div className="Field"> 
@@ -152,4 +233,4 @@ async function handleSubmit(e){
     );
 }
 
-export {GoogleAuth,RegisterForm};
+export {GoogleAuth,RegisterForm, LoginForm};
