@@ -7,6 +7,8 @@ import axios from "axios";
 
 
 
+
+
 const BASE_URL= "http://localhost:3000";
 let userId=9;
 
@@ -15,9 +17,11 @@ function Lists() {
     
 const [lists, setLists]=useState();
 
+
 useEffect(()=>{
     if (!lists){
-      axios.get(BASE_URL+"/").then((res)=>{
+      axios.get(BASE_URL+"/lists").then((res)=>{
+        console.log(res.data);
         setLists(res.data || []);
       });
     }

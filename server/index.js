@@ -1,20 +1,71 @@
 import express from "express";
+import { Strategy } from "passport-local";
+import env from "dotenv";
+import passport from "passport";
+import session from "express-session";
 import bodyParser from "body-parser";
 import cors from "cors";
 import { addNewItem ,deleteItem, editItem} from "./persistance/items.js";
 import {addNewList, deleteList, editList} from "./persistance/lists.js";
 import { getUserItems, getUserLists, addUser} from "./persistance/users.js";
 import { getDate } from "./helpers/helpers.js";
+import { getDb } from "./persistance/db.js";
+
+
+let currentUser={};
+
+
+const db=await getDb();
 const app=express();
 const port= 3000;
-const userId=9;
+let userId=9;
+
+env.config();
 
 //Middelwear
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.static("public"));
 app.use(bodyParser.json());
 app.use(cors());
 
-app.get("/", async (req,res) =>{
+
+app.use(session({
+    secret:"this is my secret",
+    resave:false,
+    saveUninitialized:true,
+    // cookie:{
+    //   //timeout for cookie 
+    //   maxAge:1000*60*60*24,
+    //    }
+    })
+  );
+
+  app.use(passport.initialize());
+  app.use(passport.session());
+
+// app.get("/", async (req,res) =>{
+//     const items=await getUserItems(userId);
+//     const lists=await getUserLists(userId);
+//     const listsById={
+
+//     }
+    
+//     lists.forEach(list => {
+//         listsById[list.id]={...list, items:[]} 
+//     });
+
+//     items.forEach(item =>{
+//         listsById[item.lists_id.toString()].items=[...listsById[item.lists_id.toString()].items, item];
+//     });
+    
+//     res.send(Object.values(listsById));
+// });
+
+
+app.get("/lists", async (req,res)=>{
+
+    console.log(currentUser);
+    userId=currentUser.id;
     const items=await getUserItems(userId);
     const lists=await getUserLists(userId);
     const listsById={
@@ -27,9 +78,21 @@ app.get("/", async (req,res) =>{
     items.forEach(item =>{
         listsById[item.lists_id.toString()].items=[...listsById[item.lists_id.toString()].items, item];
     });
-    
     res.send(Object.values(listsById));
+  
 });
+
+
+//Login POST route
+app.post("/login/password", passport.authenticate("local",
+  { 
+    successRedirect:"/lists",
+    failureRedirect:"/login"
+  }));
+ 
+  
+
+
 
 //Add User 
 app.post("/newuser", async (req,res) => {
@@ -114,6 +177,54 @@ app.post("/editlist", async (req,res) => {
     }
     const edited=await editList(listToEdit);
     res.send(edited.lists_name);
+});
+
+
+
+passport.use("local",
+    new Strategy(async function verify( username, password, cb){
+      console.log(username);
+      console.log(password);
+      
+    try {
+      const result = await db.query("SELECT * FROM users WHERE email = $1", [
+        username,
+      ]);
+      if (result.rows.length > 0) {
+        console.log("user exists");
+        const user = result.rows[0];
+       
+        console.log(user);
+        const storedPassword = user.password;
+        if (password == storedPassword) {
+            console.log("password matches");
+            currentUser=user;
+            return cb(null, user);
+        } else {
+          console.log("try again");
+          return cb(null,false);
+        }
+
+      } else {
+        return cb("User not found");
+      }
+    } catch (err) {
+      console.log(err);
+       return cb(err);
+    }
+  }
+  ));
+
+
+passport.serializeUser((user, cb)=>{
+  console.log("🚀 ~ passport.serializeUser ~ user:", user)
+  return cb(null,user);
+});
+
+passport.deserializeUser((user,cb)=>{
+  console.log("🚀 ~ passport.deserializeUser ~ user:", user)
+  
+  return cb(null,user);
 });
 
 app.listen(port, () =>{

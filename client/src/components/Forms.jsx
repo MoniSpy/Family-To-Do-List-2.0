@@ -2,6 +2,7 @@ import React from "react";
 import axios from "axios";
 import {useState} from "react"; 
 import { FaGoogle } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 const BASE_URL= "http://localhost:3000";
 
@@ -20,8 +21,8 @@ const PasswordErrorMessage = () => {
    }; 
 
 
-
 function  LoginForm(){
+    const navegate=useNavigate();
     const [email, setEmail] = useState(""); 
     const [password, setPassword] = useState({ 
         value: "", 
@@ -50,12 +51,21 @@ async function handleSubmitLogin(e){
         email:email,
         password:password.value
     }
+    
+    try{
+        const response= await axios.post(BASE_URL+"/login/password", {username:email,password:password.value });
+        console.log(response.data);
+        navegate("/lists");
+    }catch(e){
+        console.log(e.message);
+    }
+  
     console.log("logging in" , user);
     clearForm(); 
   }; 
     return(
         <div> 
-        <form onSubmit={handleSubmitLogin}> 
+        <form  onSubmit={handleSubmitLogin}> 
           <fieldset> 
             <h2>Login</h2> 
             <div className="Field"> 
@@ -67,7 +77,8 @@ async function handleSubmitLogin(e){
                 onChange={(e) => { 
                   setEmail(e.target.value); 
                 }} 
-                placeholder="Email address" 
+                placeholder="Email address"
+                name="username"
               /> 
             </div> 
             <div className="Field"> 
@@ -84,6 +95,7 @@ async function handleSubmitLogin(e){
                   setPassword({ ...password, isTouched: true }); 
                 }} 
                 placeholder="Password" 
+                name="password"
               /> 
               {password.isTouched && password.value.length < 8 ? ( 
                 <PasswordErrorMessage /> 

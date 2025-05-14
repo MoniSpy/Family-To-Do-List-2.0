@@ -1,9 +1,9 @@
 import React from "react";
 import Home from "./Home";
-import Footer from "./Footer";
 import {BrowserRouter, Route, Routes} from "react-router-dom";
 import Register from "./Register";
 import Login from "./Login";
+import Lists from "./Lists";
 
 
 function App() {
@@ -13,6 +13,7 @@ function App() {
         <Route exact path="/" element={<Home/>}/>
         <Route path="/register" element={<Register/>}/>
         <Route path="/login" element={<Login/>}/>
+        <Route path="/lists" element={<Lists/>}/>
       </Routes>
     </BrowserRouter>
   );
