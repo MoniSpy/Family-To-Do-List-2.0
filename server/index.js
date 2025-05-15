@@ -10,6 +10,7 @@ import {addNewList, deleteList, editList} from "./persistance/lists.js";
 import { getUserItems, getUserLists, addUser} from "./persistance/users.js";
 import { getDate } from "./helpers/helpers.js";
 import { getDb } from "./persistance/db.js";
+import bcrypt from "bcrypt";
 
 
 let currentUser={};
@@ -19,6 +20,7 @@ const db=await getDb();
 const app=express();
 const port= 3000;
 let userId=9;
+const saltRounds = 10;
 
 env.config();
 
@@ -33,38 +35,29 @@ app.use(session({
     secret:"this is my secret",
     resave:false,
     saveUninitialized:true,
-    // cookie:{
-    //   //timeout for cookie 
-    //   maxAge:1000*60*60*24,
-    //    }
+    cookie:{
+      maxAge:1000*60*60*24,
+       }
     })
   );
 
   app.use(passport.initialize());
   app.use(passport.session());
 
-// app.get("/", async (req,res) =>{
-//     const items=await getUserItems(userId);
-//     const lists=await getUserLists(userId);
-//     const listsById={
-
-//     }
-    
-//     lists.forEach(list => {
-//         listsById[list.id]={...list, items:[]} 
-//     });
-
-//     items.forEach(item =>{
-//         listsById[item.lists_id.toString()].items=[...listsById[item.lists_id.toString()].items, item];
-//     });
-    
-//     res.send(Object.values(listsById));
-// });
 
 
-app.get("/lists", async (req,res)=>{
 
-    console.log(currentUser);
+
+//Login POST route
+app.post("/login/password", passport.authenticate("local",
+  { 
+    successRedirect:"/lists",
+    failureRedirect:"/login"
+  }));
+ 
+  
+  app.get("/lists", async (req,res)=>{
+    console.log(req.isAuthenticated());//is authenticate is false passport isnt passing the user object--need to figure it out 
     userId=currentUser.id;
     const items=await getUserItems(userId);
     const lists=await getUserLists(userId);
@@ -79,19 +72,7 @@ app.get("/lists", async (req,res)=>{
         listsById[item.lists_id.toString()].items=[...listsById[item.lists_id.toString()].items, item];
     });
     res.send(Object.values(listsById));
-  
 });
-
-
-//Login POST route
-app.post("/login/password", passport.authenticate("local",
-  { 
-    successRedirect:"/lists",
-    failureRedirect:"/login"
-  }));
- 
-  
-
 
 
 //Add User 
@@ -103,13 +84,39 @@ app.post("/newuser", async (req,res) => {
     res.send(newUser);
 });
 
-//register a new user
 app.post("/register", async (req,res) => {
     const newUser=req.body.newUser;
     console.log(newUser);
-    const user= await addUser(newUser);
-    console.log(user);
-    res.send(user);
+    try{
+      const checkResult= await db.query("SELECT * FROM users WHERE email=$1", 
+        [newUser.email]
+      );
+      if (checkResult.rows.length>0){
+        res.send("User already exist. Try logging in");
+        // res.redirect("/login");
+      }else{
+        bcrypt.hash(newUser.password,saltRounds, async (err, hash) => {
+        if (err){
+        console.log("Error hashing password", err);
+        }else{
+           console.log("Hashed password:", hash);     
+           const user= await addUser({
+            ...newUser,
+            password:hash
+           });
+           
+           console.log(user);
+
+           req.login(user,(err)=> {
+            res.redirect("/lists");
+          });
+        }
+      })
+    }
+  }catch(err){
+    console.log(err); 
+  }
+
 });
 
 //Add item

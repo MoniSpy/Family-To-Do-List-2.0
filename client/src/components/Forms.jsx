@@ -55,7 +55,7 @@ async function handleSubmitLogin(e){
     try{
         const response= await axios.post(BASE_URL+"/login/password", {username:email,password:password.value });
         console.log(response.data);
-        navegate("/lists");
+        // navegate("/lists");
     }catch(e){
         console.log(e.message);
     }
