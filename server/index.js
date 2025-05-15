@@ -106,7 +106,7 @@ app.post("/register", async (req,res) => {
            });
            
            console.log(user);
-
+           currentUser=newUser;
            req.login(user,(err)=> {
             res.redirect("/lists");
           });
@@ -190,37 +190,56 @@ app.post("/editlist", async (req,res) => {
 
 passport.use("local",
     new Strategy(async function verify( username, password, cb){
-      console.log(username);
-      console.log(password);
-      
+      console.log(username, password);    
     try {
       const result = await db.query("SELECT * FROM users WHERE email = $1", [
         username,
       ]);
       if (result.rows.length > 0) {
-        console.log("user exists");
         const user = result.rows[0];
-       
-        console.log(user);
-        const storedPassword = user.password;
-        if (password == storedPassword) {
-            console.log("password matches");
-            currentUser=user;
-            return cb(null, user);
-        } else {
-          console.log("try again");
-          return cb(null,false);
-        }
-
+        const storedHashedPassword=user.password;
+        bcrypt.compare(password, storedHashedPassword, (err, result) => {        console.log(user);
+          if (err) {
+            return cb(err);
+            console.error("Error comparing passwords:", err);
+          } else {
+            if (result) {
+              return cb(null, user)
+              
+            } else {
+              return cb(null,false);
+            }
+          }
+        });
       } else {
         return cb("User not found");
       }
     } catch (err) {
-      console.log(err);
        return cb(err);
     }
   }
   ));
+        
+        
+  //         const storedPassword = user.password;
+  //       if (password == storedPassword) {
+  //           console.log("password matches");
+  //           currentUser=user;
+  //           return cb(null, user);
+  //       } else {
+  //         console.log("try again");
+  //         return cb(null,false);
+  //       }
+
+  //     } else {
+  //       return cb("User not found");
+  //     }
+  //   } catch (err) {
+  //     console.log(err);
+  //      return cb(err);
+  //   }
+  // }
+  // ));
 
 
 passport.serializeUser((user, cb)=>{
