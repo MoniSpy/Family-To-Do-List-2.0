@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 
 const BASE_URL= "http://localhost:3000";
 
+
 const validateEmail = (email) => {
     return String(email)
       .toLowerCase()
@@ -53,8 +54,8 @@ async function handleSubmitLogin(e){
     }
     
     try{
-        const response= await axios.post(BASE_URL+"/login/password", {username:email,password:password.value });
-        console.log(response.data);
+        const response= await axios.post(BASE_URL+"/login/password", {username:email,password:password.value },{withCredentials:true});
+        localStorage.setItem("userId", response.data.id);
         navegate("/lists");
     }catch(e){
         console.log(e.message);

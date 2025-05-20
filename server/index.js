@@ -19,7 +19,8 @@ let currentUser={};
 const db=await getDb();
 const app=express();
 const port= 3000;
-let userId=9;
+let userId;
+
 const saltRounds = 10;
 
 env.config();
@@ -28,7 +29,10 @@ env.config();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
 app.use(bodyParser.json());
-app.use(cors());
+app.use(cors({
+  origin: 'http://localhost:5173',
+  credentials: true
+}));
 
 
 app.use(session({
@@ -40,37 +44,52 @@ app.use(session({
        }
     })
   );
-
+  
   app.use(passport.initialize());
   app.use(passport.session());
 
 
 
+app.get("/authenticated",(req,res) => {
+  if(req.isAuthenticated()){
+    return res.send(req.user);
+  }else{
+    console.log("not authenticated");
+  }
 
+});
 
 //Login POST route
 app.post("/login/password", passport.authenticate("local",
   { 
-    successRedirect:"/lists",
+    successRedirect:"/authenticated",
     failureRedirect:"/login"
   }));
  
   
   app.get("/lists", async (req,res)=>{
     console.log(req.isAuthenticated());//is authenticate is false passport isnt passing the user object--need to figure it out 
+    currentUser=req.user;
+    console.log("🚀 ~ app.get ~ currentUser:", currentUser);
     userId=currentUser.id;
+    console.log("🚀 ~ app.get ~ userId:", userId);
     const items=await getUserItems(userId);
     const lists=await getUserLists(userId);
     const listsById={
     }
-    
+  
     lists.forEach(list => {
         listsById[list.id]={...list, items:[]} 
     });
+    console.log("🚀 ~ app.get ~  listsById:",  listsById);
 
     items.forEach(item =>{
+      console.log("🚀 ~ app.get ~ item:", item)
         listsById[item.lists_id.toString()].items=[...listsById[item.lists_id.toString()].items, item];
-    });
+      });
+  
+      console.log("🚀 ~ app.get ~  listsById:",  listsById);
+  
     res.send(Object.values(listsById));
 });
 
@@ -221,25 +240,7 @@ passport.use("local",
   ));
         
         
-  //         const storedPassword = user.password;
-  //       if (password == storedPassword) {
-  //           console.log("password matches");
-  //           currentUser=user;
-  //           return cb(null, user);
-  //       } else {
-  //         console.log("try again");
-  //         return cb(null,false);
-  //       }
 
-  //     } else {
-  //       return cb("User not found");
-  //     }
-  //   } catch (err) {
-  //     console.log(err);
-  //      return cb(err);
-  //   }
-  // }
-  // ));
 
 
 passport.serializeUser((user, cb)=>{
