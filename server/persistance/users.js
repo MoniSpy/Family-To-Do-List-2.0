@@ -29,6 +29,7 @@ async function getUserItems(userId){
             item.creation_date=getDate(item.creation_date);  
           });
          
+          
           return items; 
       }
 
