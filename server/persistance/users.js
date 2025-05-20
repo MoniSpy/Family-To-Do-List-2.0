@@ -23,6 +23,8 @@ async function getUserItems(userId){
             [userId]
           );
           let items= result.rows;
+          console.log("🚀 ~ getUserItems ~ items:", items);
+          
           items.forEach((item) => {
             item.creation_date=getDate(item.creation_date);  
           });
@@ -36,8 +38,7 @@ async function getUserLists(userId){
         const result=await db.query("SELECT lists.id ,lists_name, user_id FROM lists JOIN users ON users.id=lists.user_id WHERE users.id=$1;",
         [userId]);
         let lists=result.rows;
-        // console.log("users lists");
-        // console.log(lists);
+        console.log("🚀 ~ getUserLists ~ lists:", lists);
         return result.rows;
       }
 
