@@ -168,13 +168,13 @@ async function handleSubmitRegister(e){
     }
     console.log(newUser);
     try{
-        const response=  await axios.post(BASE_URL+"/register", {newUser});
+        const response=  await axios.post(BASE_URL+"/register", {newUser},{withCredentials:true});
         const user=response.data;
-        console.log(user);
+        navegate("/login");
+        console.log("🚀 ~ handleSubmitRegister ~ user:", user);
     }catch(e){
         console.log(e.message);
     }
-    navegate("/lists");
 
     clearForm(); 
 
