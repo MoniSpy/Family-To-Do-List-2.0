@@ -2,10 +2,11 @@ import { useState } from "react";
 import TodoItem from "./TodoItem";
 import { getDate } from "../../../server/helpers/helpers";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
+import { getUserIdFromSession } from "../helpers";
 
 function TodoList(props) {
 
-
+    const userId=getUserIdFromSession();
     const [items, setItems] = useState(
         props.items
     );
@@ -25,7 +26,7 @@ function TodoList(props) {
             date:getDate(new Date()),
             completed:false,
             lists_id:listsId,
-            users_id:9
+            users_id:userId
         }
         props.onAdd(data);
         setItems([...items, newItem]);
