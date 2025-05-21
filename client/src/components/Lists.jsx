@@ -4,6 +4,7 @@ import Header from "./Header";
 import Footer from "./Footer";
 import TodoList from "./TodoList";
 import axios from "axios";
+import { getUserIdFromSession } from "../helpers";
 
 
 
@@ -13,7 +14,7 @@ const BASE_URL= "http://localhost:3000";
 
 function Lists() {
 
-const userId=localStorage.getItem("userId");
+const userId=getUserIdFromSession();
 const [lists, setLists]=useState();
 
 
