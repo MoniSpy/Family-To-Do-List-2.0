@@ -170,7 +170,8 @@ async function handleSubmitRegister(e){
     try{
         const response=  await axios.post(BASE_URL+"/register", {newUser});
         const user=response.data;
-        console.log(user);
+        console.log("🚀 ~ handleSubmitRegister ~ user:", user)
+        // console.log(user);
     }catch(e){
         console.log(e.message);
     }

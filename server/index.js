@@ -127,7 +127,7 @@ app.post("/register", async (req,res) => {
            console.log(user);
            currentUser=newUser;
            req.login(user,(err)=> {
-            res.redirect("/lists");
+           res.redirect("/lists");
           });
         }
       })
@@ -135,6 +135,7 @@ app.post("/register", async (req,res) => {
   }catch(err){
     console.log(err); 
   }
+  
 
 });
 
