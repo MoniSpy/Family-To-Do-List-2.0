@@ -38,7 +38,7 @@ app.use(cors({
 app.use(session({
     secret:"this is my secret",
     resave:false,
-    saveUninitialized:true,
+    saveUninitialized:false,
     cookie:{
       maxAge:1000*60*60*24,
        }
@@ -81,14 +81,14 @@ app.post("/login/password", passport.authenticate("local",
     lists.forEach(list => {
         listsById[list.id]={...list, items:[]} 
     });
-    console.log("🚀 ~ app.get ~  listsById:",  listsById);
+    // console.log("🚀 ~ app.get ~  listsById:",  listsById);
 
     items.forEach(item =>{
-      console.log("🚀 ~ app.get ~ item:", item)
+      // console.log("🚀 ~ app.get ~ item:", item)
         listsById[item.lists_id.toString()].items=[...listsById[item.lists_id.toString()].items, item];
       });
   
-      console.log("🚀 ~ app.get ~  listsById:",  listsById);
+      // console.log("🚀 ~ app.get ~  listsById:",  listsById);
   
     res.send(Object.values(listsById));
 });
@@ -105,14 +105,14 @@ app.post("/newuser", async (req,res) => {
 
 app.post("/register", async (req,res) => {
     const newUser=req.body.newUser;
-    console.log(newUser);
+    console.log("🚀 ~ app.post ~ newUser=:", newUser);
     try{
       const checkResult= await db.query("SELECT * FROM users WHERE email=$1", 
         [newUser.email]
       );
       if (checkResult.rows.length>0){
         res.send("User already exist. Try logging in");
-        // res.redirect("/login");
+
       }else{
         bcrypt.hash(newUser.password,saltRounds, async (err, hash) => {
         if (err){
@@ -123,20 +123,14 @@ app.post("/register", async (req,res) => {
             ...newUser,
             password:hash
            });
-           
-           console.log(user);
-           currentUser=newUser;
-           req.login(user,(err)=> {
-           res.redirect("/lists");
-          });
+           console.log("🚀 ~ bcrypt.hash ~ user:", user);
+           res.sendStatus(200); 
         }
       })
     }
   }catch(err){
     console.log(err); 
   }
-  
-
 });
 
 //Add item
@@ -240,8 +234,6 @@ passport.use("local",
   }
   ));
         
-        
-
 
 
 passport.serializeUser((user, cb)=>{
@@ -250,8 +242,7 @@ passport.serializeUser((user, cb)=>{
 });
 
 passport.deserializeUser((user,cb)=>{
-  console.log("🚀 ~ passport.deserializeUser ~ user:", user)
-  
+  console.log("🚀 ~ passport.deserializeUser ~ user:", user);
   return cb(null,user);
 });
 
