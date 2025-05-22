@@ -60,7 +60,6 @@ async function handleSubmitLogin(e){
     }catch(e){
         console.log(e.message);
     }
-  
     console.log("logging in" , user);
     clearForm(); 
   }; 
@@ -102,7 +101,6 @@ async function handleSubmitLogin(e){
                 <PasswordErrorMessage /> 
               ) : null} 
             </div> 
-          
             <button className="submit" type="submit" disabled={!getIsFormValid()}> 
               Login
             </button> 
