@@ -68,27 +68,21 @@ app.post("/login/password", passport.authenticate("local",
  
   
   app.get("/lists", async (req,res)=>{
-    console.log(req.isAuthenticated());//is authenticate is false passport isnt passing the user object--need to figure it out 
+    console.log(req.isAuthenticated());
     currentUser=req.user;
-    console.log("🚀 ~ app.get ~ currentUser:", currentUser);
     userId=currentUser.id;
-    console.log("🚀 ~ app.get ~ userId:", userId);
     const items=await getUserItems(userId);
     const lists=await getUserLists(userId);
     const listsById={
     }
-  
+
     lists.forEach(list => {
         listsById[list.id]={...list, items:[]} 
-    });
-    // console.log("🚀 ~ app.get ~  listsById:",  listsById);
-
+      });
+    
     items.forEach(item =>{
-      // console.log("🚀 ~ app.get ~ item:", item)
         listsById[item.lists_id.toString()].items=[...listsById[item.lists_id.toString()].items, item];
       });
-  
-      // console.log("🚀 ~ app.get ~  listsById:",  listsById);
   
     res.send(Object.values(listsById));
 });
@@ -112,6 +106,7 @@ app.post("/register", async (req,res) => {
       );
       if (checkResult.rows.length>0){
         res.send("User already exist. Try logging in");
+
 
       }else{
         bcrypt.hash(newUser.password,saltRounds, async (err, hash) => {
