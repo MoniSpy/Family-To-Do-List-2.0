@@ -28,8 +28,6 @@ async function getUserItems(userId){
           items.forEach((item) => {
             item.creation_date=getDate(item.creation_date);  
           });
-         
-          
           return items; 
       }
 

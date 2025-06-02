@@ -1,5 +1,6 @@
 import express from "express";
 import { Strategy } from "passport-local";
+import {Strategy as GoogleStrategy} from "passport-google-oauth20";
 import env from "dotenv";
 import passport from "passport";
 import session from "express-session";
@@ -11,6 +12,7 @@ import { getUserItems, getUserLists, addUser} from "./persistance/users.js";
 import { getDate } from "./helpers/helpers.js";
 import { getDb } from "./persistance/db.js";
 import bcrypt from "bcrypt";
+import e from "express";
 
 
 let currentUser={};
@@ -36,7 +38,7 @@ app.use(cors({
 
 
 app.use(session({
-    secret:"this is my secret",
+    secret:process.env.SESSION_SECRET,
     resave:false,
     saveUninitialized:false,
     cookie:{
@@ -51,6 +53,7 @@ app.use(session({
 
 
 app.get("/authenticated",(req,res) => {
+  console.log("authenticate");
   if(req.isAuthenticated()){
     return res.send(req.user);
   }else{
@@ -58,6 +61,21 @@ app.get("/authenticated",(req,res) => {
   }
 
 });
+
+app.get ("/auth/google", passport.authenticate("google", {
+  scope:["profile", "email"],
+  
+}));
+
+
+
+app.get("/google/auth/lists", passport.authenticate("google", 
+  {
+    successRedirect:"/authenticated",
+    failureRedirect:"/login"
+}));
+
+
 
 //Login POST route
 app.post("/login/password", passport.authenticate("local",
@@ -228,8 +246,40 @@ passport.use("local",
     }
   }
   ));
-        
 
+passport.use("google",
+    new GoogleStrategy ({
+      clientID: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      callbackURL:"http://localhost:3000/google/auth/lists",
+      userProfileURL:"https://www.googleapis.com/oauth2/v3/userinfo",
+    }, async(accessToken, refreshToken, profile, cb) =>{
+      console.log(profile);
+      
+      // try {
+      //   console.log("Querying db for current user existance");
+      //   const result=await db.query("SELECT * FROM users WHERE email = $1" ,
+      //     [profile.email]);
+      //     if (result.rows.length===0) {
+      //        console.log("Check if user exists");
+      //       //User password is stored as "google", to identify users who have registered using google strategy instead of local strategy
+      //       const newUser=await db.query(
+      //         "INSERT INTO users (email, password, first_name, last_name) VALUES ($1, $2, $3, $4) RETURNING *", 
+      //         [profile.email, "google", profile.given_name, profile.family_name]
+      //       );
+      //       cb(null, newUser.rows[0]);
+      //     } else {
+      //       // Already have the existing user
+      //       // Tap into result.rows to grab existing user
+      //       cb(null, result.rows[0]);
+      //     }
+      // } catch(err) {
+      //   // Use call back to pass error
+      //   cb(err);
+      // }
+    } 
+  )
+ );
 
 passport.serializeUser((user, cb)=>{
   console.log("🚀 ~ passport.serializeUser ~ user:", user)

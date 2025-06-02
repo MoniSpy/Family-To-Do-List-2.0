@@ -109,18 +109,19 @@ async function handleSubmitLogin(e){
       </div> 
     );
 }
+
+
 // sign in with google form
 function GoogleAuth(props){
    const text=props.text;
     return (     
         <div className="googleAuth">
-            <button style={{margin:"20px", padding:"30px"}}> 
-                <a  href="/auth/google" >
-                    {text}
-                    <FaGoogle size={50} style={{ marginRight: "20px"}}/>
-                </a>
-            
-            </button>  
+                <button style={{margin:"20px", padding:"30px"}}>    
+                  <a  href="http://localhost:3000/auth/google" >
+                      {text}
+                      <FaGoogle size={50} style={{ marginRight: "20px"}}/>
+                  </a>
+                </button> 
         </div>
     );
 }
