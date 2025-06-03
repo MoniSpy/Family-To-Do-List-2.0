@@ -59,19 +59,15 @@ app.get("/authenticated",(req,res) => {
   }else{
     console.log("not authenticated");
   }
-
 });
 
 app.get ("/auth/google", passport.authenticate("google", {
-  scope:["profile", "email"],
-  
+  scope:["profile", "email"], 
 }));
-
-
 
 app.get("/google/auth/lists", passport.authenticate("google", 
   {
-    successRedirect:"/authenticated",
+    successRedirect:"http://localhost:5173/lists",
     failureRedirect:"/login"
 }));
 
@@ -83,17 +79,14 @@ app.post("/login/password", passport.authenticate("local",
     successRedirect:"/authenticated",
     failureRedirect:"/login"
   }));
- 
   
   app.get("/lists", async (req,res)=>{
-    console.log(req.isAuthenticated());
     currentUser=req.user;
     userId=currentUser.id;
     const items=await getUserItems(userId);
     const lists=await getUserLists(userId);
     const listsById={
     }
-
     lists.forEach(list => {
         listsById[list.id]={...list, items:[]} 
       });
@@ -174,14 +167,16 @@ app.patch("/edititem/:id", async (req,res) => {
 
 //Add new list
 app.post("/newlist" , async (req,res) => {
-    const response=await addNewList(req.body);
-    console.log("🚀 ~ app.post ~ response:", response)
+  let newL={
+    title:req.body.title,
+    user_id:userId
+  }
+  const response=await addNewList(newL); 
     const id=response.id;
     const data = {
         text:" ",
         date:new Date(),
         completed:false,
-        
         lists_id:id,
         users_id:userId
     }
@@ -212,8 +207,6 @@ app.post("/editlist", async (req,res) => {
     const edited=await editList(listToEdit);
     res.send(edited.lists_name);
 });
-
-
 
 passport.use("local",
     new Strategy(async function verify( username, password, cb){
@@ -254,34 +247,28 @@ passport.use("google",
       callbackURL:"http://localhost:3000/google/auth/lists",
       userProfileURL:"https://www.googleapis.com/oauth2/v3/userinfo",
     }, async(accessToken, refreshToken, profile, cb) =>{
-      console.log(profile);
-      
-      // try {
-      //   console.log("Querying db for current user existance");
-      //   const result=await db.query("SELECT * FROM users WHERE email = $1" ,
-      //     [profile.email]);
-      //     if (result.rows.length===0) {
-      //        console.log("Check if user exists");
-      //       //User password is stored as "google", to identify users who have registered using google strategy instead of local strategy
-      //       const newUser=await db.query(
-      //         "INSERT INTO users (email, password, first_name, last_name) VALUES ($1, $2, $3, $4) RETURNING *", 
-      //         [profile.email, "google", profile.given_name, profile.family_name]
-      //       );
-      //       cb(null, newUser.rows[0]);
-      //     } else {
-      //       // Already have the existing user
-      //       // Tap into result.rows to grab existing user
-      //       cb(null, result.rows[0]);
-      //     }
-      // } catch(err) {
-      //   // Use call back to pass error
-      //   cb(err);
-      // }
+     const user= profile._json;
+      try {
+        const result=await db.query("SELECT * FROM users WHERE email = $1" ,
+          [user.email]);
+          if (result.rows.length===0) {
+            const newUser=await db.query(
+              "INSERT INTO users (email, password, first_name, last_name) VALUES ($1, $2, $3, $4) RETURNING *", 
+              [user.email, "google", user.given_name, user.family_name]
+            );
+            cb(null, newUser.rows[0]);
+          } else {
+            cb(null, result.rows[0]);
+          }
+      } catch(err) {
+        cb(err);
+      }
     } 
   )
  );
 
 passport.serializeUser((user, cb)=>{
+  // userId=user.id;
   console.log("🚀 ~ passport.serializeUser ~ user:", user)
   return cb(null,user);
 });
