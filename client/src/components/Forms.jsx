@@ -23,7 +23,7 @@ const PasswordErrorMessage = () => {
 
 
 function  LoginForm(){
-    const navegate=useNavigate();
+    const navigate=useNavigate();
     const [email, setEmail] = useState(""); 
     const [password, setPassword] = useState({ 
         value: "", 
@@ -52,15 +52,13 @@ async function handleSubmitLogin(e){
         email:email,
         password:password.value
     }
-    
     try{
         const response= await axios.post(BASE_URL+"/login/password", {username:email,password:password.value },{withCredentials:true});
         localStorage.setItem("userId", response.data.id);
-        navegate("/lists");
+        navigate("/lists");
     }catch(e){
         console.log(e.message);
     }
-  
     console.log("logging in" , user);
     clearForm(); 
   }; 
@@ -102,7 +100,6 @@ async function handleSubmitLogin(e){
                 <PasswordErrorMessage /> 
               ) : null} 
             </div> 
-          
             <button className="submit" type="submit" disabled={!getIsFormValid()}> 
               Login
             </button> 
@@ -111,26 +108,29 @@ async function handleSubmitLogin(e){
       </div> 
     );
 }
+
+
 // sign in with google form
 function GoogleAuth(props){
    const text=props.text;
     return (     
-        <div className="googleAuth">
-            <button style={{margin:"20px", padding:"30px"}}> 
-                <a  href="/auth/google" >
-                    {text}
-                    <FaGoogle size={50} style={{ marginRight: "20px"}}/>
-                </a>
-            
-            </button>  
+        <div className="googleAuth"> 
+                <button style={{margin:"20px", padding:"30px"}}>    
+                 <a href="http://localhost:3000/auth/google">
+                      {text}
+                      <FaGoogle size={50} style={{ marginRight: "20px"}}/>
+                 </a>
+                </button> 
         </div>
     );
 }
 
 
+
+
 // register user form 
 function RegisterForm(){
-  const navegate=useNavigate();
+  const navigate=useNavigate();
     const [firstName, setFirstName] = useState(""); 
     const [lastName, setLastName] = useState(""); 
     const [email, setEmail] = useState(""); 
@@ -170,7 +170,7 @@ async function handleSubmitRegister(e){
     try{
         const response=  await axios.post(BASE_URL+"/register", {newUser},{withCredentials:true});
         const user=response.data;
-        navegate("/login");
+        navigate("/login");
         console.log("🚀 ~ handleSubmitRegister ~ user:", user);
     }catch(e){
         console.log(e.message);

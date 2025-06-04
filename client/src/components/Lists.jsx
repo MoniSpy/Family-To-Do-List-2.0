@@ -28,7 +28,6 @@ useEffect(()=>{
   },[lists]);
 
 async function addItem(newItem) {
-
     try{
       const response =await axios.post(BASE_URL+"/newitem", newItem); 
       return response.data;
@@ -60,7 +59,6 @@ async function addItem(newItem) {
 async function addList(){
   const newL={
     title:"New list title..",
-    user_id:userId,
   }
   try{
     const response= await axios.post(BASE_URL+"/newlist", newL);
