@@ -200,6 +200,16 @@ footer p {
   padding: 20px;
   font-size: 36px;
 }
+.logoutbutt{
+  border-radius: 50px;
+  background-color: #f5ba13;
+  color: #fff;
+  font-family: "McLaren", cursive;
+  font-weight: 200;
+  border: 2px solid white;
+  padding: 20px;
+  font-size: 36px;
+}
 
 
 .main{
