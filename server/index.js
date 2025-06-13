@@ -33,10 +33,9 @@ app.use(express.static("public"));
 app.use(bodyParser.json());
 app.use(cors({
     origin:'http://localhost:5173',
-    credentials: true,
-    
+    credentials: true
 }));
-app.use(cors());
+
 
 
 
@@ -45,6 +44,9 @@ app.use(session({
     resave:false,
     saveUninitialized:false,
     cookie:{
+      secure:false,
+      httpOnly:true,
+      sameSite:'lax',
       maxAge:1000*60*60*24,
        }
     })
@@ -62,6 +64,7 @@ app.use(session({
       res.send({message:"hello"});
     });
   });
+
 app.get("/authenticated",(req,res) => {
   console.log("authenticate");
   if(req.isAuthenticated()){
