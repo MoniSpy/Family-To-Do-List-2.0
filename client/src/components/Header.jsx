@@ -1,12 +1,22 @@
 import React from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faList } from '@fortawesome/free-solid-svg-icons';
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
-function Logout(){
+
+
+const BASE_URL= "http://localhost:3000";
+
+async function Logout(){ 
   console.log("logout");
+  const response= await axios.get(BASE_URL+"/api/logout");
+  console.log(response.data);
+  // navigate("/");
 }
 
 function Header() {
+  // const navigate=useNavigate();
   return (
     <header>
       <div className="header">

@@ -5,13 +5,7 @@ import { Link } from "react-router-dom";
 
 
 function Home(){
-async function register(){ 
-    console.log("register");
-}
 
-async function login(){
-    console.log("login");
-}
 
     return(
         <div>
@@ -20,12 +14,12 @@ async function login(){
                 
                     <Link style={{ textDecoration: 'none' }} to="/register">
                         <div className="butt" >
-                            <button  onClick={() => register ()}>Register</button>
+                            <button>Register</button>
                         </div>
                     </Link>
                     <Link style={{ textDecoration: 'none' }} to="/login">
                         <div className="butt" >
-                            <button  onClick={() => login()}>Login</button>
+                            <button>Login</button>
                         </div>
                     </Link>
                 </div>
