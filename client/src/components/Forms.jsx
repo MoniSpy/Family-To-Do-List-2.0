@@ -4,6 +4,8 @@ import {useState} from "react";
 import { FaGoogle } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
+
+
 const BASE_URL= "http://localhost:3000";
 
 
@@ -53,7 +55,7 @@ async function handleSubmitLogin(e){
         password:password.value
     }
     try{
-        const response= await axios.post(BASE_URL+"/login/password", {username:email,password:password.value },{withCredentials:true});
+        const response= await axios.post(BASE_URL+"/login/password", {username:email,password:password.value }, {withCredentials:true});
         localStorage.setItem("userId", response.data.id);
         navigate("/lists");
     }catch(e){
