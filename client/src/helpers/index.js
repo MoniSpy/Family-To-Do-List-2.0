@@ -1,1 +1,1 @@
-export const getUserIdFromSession = () => localStorage.getItem("userId");
+export const getUserIdFromSession = () => localStorage.getItem('userId')
